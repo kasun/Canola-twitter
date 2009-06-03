@@ -1,0 +1,7 @@
+[Twitter Model]
+modname = twitter.model
+enabled = True
+rank = 256
+filter_map = Icon/Folder/Task/Apps/Twitter - Icon
+             Model/Folder/Task/Apps/Twitter - MainModelFolder
+         
