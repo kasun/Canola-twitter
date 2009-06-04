@@ -1,7 +1,14 @@
+[Twitter UI]
+modname = twitter.ui
+enabled = True
+rank = 256
+filter_map = Controller/Folder/Task/Apps/Twitter - ListController
+
 [Twitter Model]
 modname = twitter.model
 enabled = True
 rank = 256
 filter_map = Icon/Folder/Task/Apps/Twitter - Icon
              Model/Folder/Task/Apps/Twitter - MainModelFolder
+	     Model/Folder/Task/Apps/Twitter/view - ViewModelFolder
          
