@@ -7,6 +7,8 @@ import logging
 
 from terra.core.manager import Manager
 
+from model import SendModelFolder,ViewModelFolder
+
 manager = Manager()
 
 BaseListController = manager.get_class("Controller/Folder")
@@ -22,7 +24,17 @@ class ListController(BaseListController):
     terra_type = "Controller/Folder/Task/Apps/Twitter"
 
     def cb_on_clicked(self, view, index):
-
-        if True:
+        model = self.model.children[index]
+        
+        if type(model) is ViewModelFolder:
             BaseListController.cb_on_clicked(self, view, index)
             return
+        
+        def do_search(ignored, text):
+            if text is not None:
+                model.query = text
+                BaseListController.cb_on_clicked(self, view, index)
+
+        dialog = EntryDialogModel("Send Tweets", "Enter text to tweet:",
+                                  answer_callback=do_search)
+        self.parent.show_notify(dialog)

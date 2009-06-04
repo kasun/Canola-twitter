@@ -52,3 +52,10 @@ class SendModelFolder(ModelFolder):
 
     def do_load(self):
         pass
+    
+    def do_search(self):
+        lst = []
+        if self.query:
+            lst = None
+            self.query = None
+        return lst
