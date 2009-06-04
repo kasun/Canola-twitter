@@ -51,11 +51,7 @@ class SendModelFolder(ModelFolder):
         ModelFolder.__init__(self, name, parent)
 
     def do_load(self):
-        pass
+        text=self.do_getText()
     
-    def do_search(self):
-        lst = []
-        if self.query:
-            lst = None
-            self.query = None
-        return lst
+    def do_getText(self):
+        return self.query

@@ -19,7 +19,7 @@ log = logging.getLogger("plugins.twitter.ui")
 
 class ListController(BaseListController):
     """This is used to initialize the twitter navigation list.
-    Namely send twits and recieve twits"""
+    Namely send tweets and recieve tweets"""
     
     terra_type = "Controller/Folder/Task/Apps/Twitter"
 
@@ -33,7 +33,6 @@ class ListController(BaseListController):
         def do_search(ignored, text):
             if text is not None:
                 model.query = text
-                BaseListController.cb_on_clicked(self, view, index)
 
         dialog = EntryDialogModel("Send Tweets", "Enter text to tweet:",
                                   answer_callback=do_search)
