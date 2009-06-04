@@ -2,4 +2,4 @@ Canola is a media center like application for Nokia Tablets. Canola could be use
 
 Twitter is social networking and micro blogging system that is experiencing exploding growth. Twitpic is a service to share photos over twitter.
 
-This project is aimed to provide a twitter plugin and twitpic support for canola.
+The aim of this project is to provied a basic twitter plugin and features to post pictures on the device using twitpic and any other URL's using plugins like youtube etc.
