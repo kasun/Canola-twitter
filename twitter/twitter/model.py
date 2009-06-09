@@ -30,11 +30,26 @@ class MainModelFolder(ModelFolder, Task):
         ModelFolder.__init__(self, "Twitter", parent)
 
     def do_load(self):
-        ViewModelFolder("View Tweets",self)
+        ViewPublicModelFolder("View Public Timeline",self)
+        ViewFriendsModelFolder("View Friend's Tweets",self)
         SendModelFolder("Send Tweet",self)
+        
+class ViewPublicModelFolder(ModelFolder):
+    terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Public"
     
-class ViewModelFolder(ModelFolder):
-    terra_type = "Model/Folder/Task/Apps/Twitter/view"
+    empty_msg = "Empty"
+    
+    def __init__(self, name, parent):
+        Task.__init__(self)
+        ModelFolder.__init__(self, name, parent)
+
+    def do_load(self):
+        pass
+    
+class ViewFriendsModelFolder(ModelFolder):
+    terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Friends"
+    
+    empty_msg = "Empty"
     
     def __init__(self, name, parent):
         Task.__init__(self)
@@ -44,14 +59,19 @@ class ViewModelFolder(ModelFolder):
         pass
     
 class SendModelFolder(ModelFolder):
-    terra_type = "Model/Folder/Task/Apps/Twitter/send"
+    terra_type = "Model/Folder/Task/Apps/Twitter/Service/Send"
+    
+    empty_msg = "Empty"
     
     def __init__(self, name, parent):
         Task.__init__(self)
         ModelFolder.__init__(self, name, parent)
+        self.query = None
 
     def do_load(self):
         text=self.do_getText()
     
     def do_getText(self):
         return self.query
+    
+
