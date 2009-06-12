@@ -34,38 +34,37 @@ class MainModelFolder(ModelFolder, Task):
         ViewFriendsModelFolder("View Friend's Tweets",self)
         SendModelFolder("Send Tweet",self)
         
-class ViewPublicModelFolder(ModelFolder):
+class ServiceModelFolder(ModelFolder):
+    terra_type = "Model/Folder/Task/Apps/Twitter/Service"
+    
+    empty_msg = "Empty"
+    
+    def __init__(self, name, parent):
+        ModelFolder.__init__(self, name, parent)
+        
+class ViewPublicModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Public"
     
-    empty_msg = "Empty"
-    
     def __init__(self, name, parent):
-        Task.__init__(self)
-        ModelFolder.__init__(self, name, parent)
+        ServiceModelFolder.__init__(self, name, parent)
 
     def do_load(self):
         pass
     
-class ViewFriendsModelFolder(ModelFolder):
+class ViewFriendsModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Friends"
     
-    empty_msg = "Empty"
-    
     def __init__(self, name, parent):
-        Task.__init__(self)
-        ModelFolder.__init__(self, name, parent)
+        ServiceModelFolder.__init__(self, name, parent)
 
     def do_load(self):
         pass
     
-class SendModelFolder(ModelFolder):
+class SendModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/Send"
     
-    empty_msg = "Empty"
-    
     def __init__(self, name, parent):
-        Task.__init__(self)
-        ModelFolder.__init__(self, name, parent)
+        ServiceModelFolder.__init__(self, name, parent)
         self.query = None
 
     def do_load(self):
