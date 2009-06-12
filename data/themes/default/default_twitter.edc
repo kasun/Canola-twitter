@@ -119,7 +119,7 @@ group{
                         relative: 0.0 1.0;
                         offset: 150 -5;
                     }
-                    image.normal: "images/no-thumb.png";
+                    image.normal: "images/no_thumb.png";
                 }
                 description {
                     state: "alternate" 0.0;
