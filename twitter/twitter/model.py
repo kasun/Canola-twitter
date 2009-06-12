@@ -60,11 +60,9 @@ class ViewFriendsModelFolder(ServiceModelFolder):
     def do_load(self):
         pass
     
-class SendModelFolder(ServiceModelFolder):
-    terra_type = "Model/Folder/Task/Apps/Twitter/Service/Send"
-    
+class SendModelFolder(ModelFolder):
     def __init__(self, name, parent):
-        ServiceModelFolder.__init__(self, name, parent)
+        ModelFolder.__init__(self, name, parent)
         self.query = None
 
     def do_load(self):
