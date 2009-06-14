@@ -6,6 +6,8 @@ from terra.core.manager import Manager
 from terra.core.task import Task
 from terra.core.model import ModelFolder, Model
 
+from client import Client
+
 manager = Manager()
 
 PluginDefaultIcon = manager.get_class("Icon/Plugin")
@@ -34,6 +36,19 @@ class MainModelFolder(ModelFolder, Task):
         ViewFriendsModelFolder("View Friend's Tweets",self)
         SendModelFolder("Send Tweet",self)
         
+class MessageModel(Model):
+    '''Model for incoming messages'''
+    
+    terra_type = "Model/Task/Apps/Twitter/Message"
+    
+    def __init__(self, name, parent):
+        Model.__init__(self,name,parent)
+        self.uname = None
+        self.text = None
+        self.thumb = None
+        
+        Model.__init__(self, name, parent)
+        
 class ServiceModelFolder(ModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service"
     
@@ -41,6 +56,31 @@ class ServiceModelFolder(ModelFolder):
     
     def __init__(self, name, parent):
         ModelFolder.__init__(self, name, parent)
+        self.client = Client()
+        
+    def do_load(self):
+        self.search()
+        
+    def search(self,end_callback=None):
+        del self.children[:]
+        
+        for model in self.do_search():
+            self.children.append(model)
+        
+    def do_search(self):
+        raise NotImplementedError("must be implemented by subclasses")
+        
+    def parse_entry_list(self, lst):
+        return [_create_model_from_entry(item) for item in lst]
+        
+    def _create_model_from_entry(self, data):
+        model = MessageModel("Message",self)
+        model.uname = data["uname"]
+        model.text = data["update"]
+        model.thumb = data["thumb_url"]
+        return model
+        
+    
         
 class ViewPublicModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Public"
@@ -48,8 +88,9 @@ class ViewPublicModelFolder(ServiceModelFolder):
     def __init__(self, name, parent):
         ServiceModelFolder.__init__(self, name, parent)
 
-    def do_load(self):
-        pass
+    def do_search(self):
+        statusList = self.client.getPublicTimeline()
+        return parse_entry_list(statusList)
     
 class ViewFriendsModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Friends"
@@ -57,8 +98,9 @@ class ViewFriendsModelFolder(ServiceModelFolder):
     def __init__(self, name, parent):
         ServiceModelFolder.__init__(self, name, parent)
 
-    def do_load(self):
-        pass
+    def do_search(self):
+        statusList = self.client.getFriendTimeline()
+        return parse_entry_list(statusList)
     
 class SendModelFolder(ModelFolder):
     def __init__(self, name, parent):
