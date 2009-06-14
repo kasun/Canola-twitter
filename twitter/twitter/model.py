@@ -47,8 +47,6 @@ class MessageModel(Model):
         self.text = None
         self.thumb = None
         
-        Model.__init__(self, name, parent)
-        
 class ServiceModelFolder(ModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service"
     
