@@ -13,31 +13,19 @@ class Client:
         
     def getPublicTimeline(self):
         statuses = self.api.GetPublicTimeline()
-        return statuses
+        lst = utils.getMessageList_from_statuses(statuses)
+        return lst
     
     def getFriendTimeline(self):
         if not self.auth:
             return
         else:
             statuses = self.api.GetFriendsTimeline()
-            return statuses
+            lst = utils.getMessageList_from_statuses(statuses)
+            return lst
         
     def sendTweet(self,msg):
         if not self.auth:
             return
         else:
             statuses = self.api.PostUpdate(msg)
-            
-if __name__ == "__main__":
-    client = Client()
-    #client = Client("kasunh01","clearme")
-    #statuses = client.getPublicTimeline()
-    statuses = client.getFriendTimeline()
-    
-    if statuses is not None:
-        lst = utils.getMessageList_from_statuses(statuses)
-        print "size: ",len(lst)
-        for msg in lst:
-            print msg["uname"],msg["update"]
-            
-    client.sendTweet("Testing twitter library")
