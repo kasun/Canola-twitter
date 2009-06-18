@@ -69,7 +69,7 @@ class ServiceModelFolder(ModelFolder):
         raise NotImplementedError("must be implemented by subclasses")
         
     def parse_entry_list(self, lst):
-        return [_create_model_from_entry(item) for item in lst]
+        return [self._create_model_from_entry(item) for item in lst]
         
     def _create_model_from_entry(self, data):
         model = MessageModel("Message",self)
@@ -88,7 +88,11 @@ class ViewPublicModelFolder(ServiceModelFolder):
 
     def do_search(self):
         statusList = self.client.getPublicTimeline()
-        return parse_entry_list(statusList)
+        
+        if(statusList is None):
+            return
+        
+        return self.parse_entry_list(statusList)
     
 class ViewFriendsModelFolder(ServiceModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Friends"
@@ -98,7 +102,11 @@ class ViewFriendsModelFolder(ServiceModelFolder):
 
     def do_search(self):
         statusList = self.client.getFriendTimeline()
-        return parse_entry_list(statusList)
+        
+        if(statusList is None):
+            print "friend list is null"
+            return
+        return self.parse_entry_list(statusList)
     
 class SendModelFolder(ModelFolder):
     def __init__(self, name, parent):
@@ -110,5 +118,20 @@ class SendModelFolder(ModelFolder):
     
     def do_getText(self):
         return self.query
+    
+################################################################################
+# twitter Options Model
+################################################################################
+
+class OptionsModel(ModelFolder):
+    terra_type = "Model/Settings/Folder/InternetMedia/Twitter"
+    title = "Twitter"
+
+    def __init__(self, parent=None):
+        ModelFolder.__init__(self, self.title, parent)
+        
+    def do_load(self):
+        return
+
     
 
