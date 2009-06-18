@@ -13,4 +13,10 @@ filter_map = Icon/Folder/Task/Apps/Twitter - Icon
              Model/Folder/Task/Apps/Twitter - MainModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Public - ViewPublicModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Friends - ViewFriendsModelFolder
-         
+	     Model/Settings/Folder/InternetMedia/Twitter - OptionsModel
+	     
+[Lastfm Options]
+modname = twitter.options
+enabled = True
+rank = 256
+filter_map = Controller/Settings/Folder/InternetMedia/Twitter - OptionsController
