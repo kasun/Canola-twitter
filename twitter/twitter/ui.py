@@ -42,7 +42,7 @@ class ListController(BaseListController):
         
 class ServiceController(BaseListController, OptionsControllerMixin):
     terra_type = "Controller/Folder/Task/Apps/Twitter/Service"
-    row_renderer = RowRendererWidget
+    #row_renderer = RowRendererWidget
     #list_group = "list_video"
 
     def __init__(self, model, canvas, parent):
