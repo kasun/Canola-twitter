@@ -35,6 +35,7 @@ class ListController(BaseListController):
         def do_search(ignored, text):
             if text is not None:
                 model.query = text
+                model.sendTweet(text)
 
         dialog = EntryDialogModel("Send Tweets", "Enter text to tweet:",
                                   answer_callback=do_search)

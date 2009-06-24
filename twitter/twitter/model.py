@@ -166,6 +166,9 @@ class SendModelFolder(ModelFolder):
     def do_getText(self):
         return self.query
     
+    def sendTweet(self,text):
+        twitter_manager.sendTweet(text)
+    
 ################################################################################
 # twitter Options Model
 ################################################################################
