@@ -21,7 +21,7 @@ log = logging.getLogger("plugins.canola-tube.twitter.model")
 
 class Icon(PluginDefaultIcon):
     terra_type = "Icon/Folder/Task/Apps/Twitter"
-    icon = "icon/main_item/photos_local"
+    icon = "icon/main_item/twitter"
     plugin = "twitter"
     
 class MainModelFolder(ModelFolder, Task):
@@ -48,7 +48,7 @@ class MainModelFolder(ModelFolder, Task):
 class MessageModel(Model):
     '''Model for incoming messages'''
     
-    terra_type = "Model/Task/Apps/Twitter/Message"
+    #terra_type = "Model/Task/Apps/Twitter/Message"
     
     def __init__(self, name, parent):
         Model.__init__(self,name,parent)
@@ -100,10 +100,6 @@ class ServiceModelFolder(ModelFolder):
                         str(exception.message)
 
                 log.error(exception)
-
-                if self.callback_notify:
-                    self.callback_notify(CanolaError(emsg))
-                return
 
             for item in retval:
                 self.children.append(item)
