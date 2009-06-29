@@ -43,7 +43,7 @@ class ListController(BaseListController):
         
 class ServiceController(BaseListController, OptionsControllerMixin):
     terra_type = "Controller/Folder/Task/Apps/Twitter/Service"
-    #row_renderer = RowRendererWidget
+    row_renderer = RowRendererWidget
     #list_group = "list_video"
 
     def __init__(self, model, canvas, parent):
@@ -61,6 +61,41 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
 
     def __init__(self, parent, theme=None):
         BaseRowRenderer.__init__(self, parent, theme)
+        self.image = self.evas.FilledImage()
+        self.part_swallow("contents", self.image)
+        self.signal_emit("thumb,hide", "")
+        
+    def theme_changed(self, end_callback=None):
+        def cb(*ignored):
+            self.part_swallow("contents", self.image)
+            if end_callback is not None:
+                end_callback(self)
+
+        BaseRowRenderer.theme_changed(self, cb)
+        
+    def cb_load_thumbnail(self):
+        try:
+            self.image.file_set(self._model.thumb)
+            self.signal_emit("thumb,show", "")
+        except Exception, e:
+            log.error("could not load image %r: %s", self._model.thumb, e)
+            self.signal_emit("thumb,hide", "")
+        
+    def value_set(self, model):
+        """Apply the model properties to the renderer."""
+        if not model or model is self._model:
+            return
+
+        self._model = model
+        self.part_text_set("user_id", model.uname)
+        self.part_text_set("text", model.text)
+
+        #model.request_thumbnail(self.cb_load_thumbnail)
+        
+    @evas.decorators.del_callback
+    def __on_delete(self):
+        """Free internal data on delete."""
+        self.image.delete()
 
 class RowRendererWidget(GeneralRowRenderer):
     row_group="list_item_twitter"
