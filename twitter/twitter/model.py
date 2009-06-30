@@ -42,8 +42,9 @@ class MainModelFolder(ModelFolder, Task):
         
         ViewPublicModelFolder("View Public Timeline",self)
         if twitter_manager.isLogged():
-            ViewFriendsModelFolder("View Friend's Tweets",self)
-            SendModelFolder("Send Tweet",self)
+            ViewFriendsModelFolder("Home",self)
+            ViewRepliesModelFolder("@"+str(twitter_manager.getUserName()),self)
+            SendModelFolder("Update my status",self)
         
 class MessageModel(ModelFolder):
     '''Model for incoming messages'''
@@ -149,6 +150,16 @@ class ViewFriendsModelFolder(ServiceModelFolder):
 
     def do_search(self):
         statusList = twitter_manager.getFriendTimeline()
+        return self.parse_entry_list(statusList)
+        
+class ViewRepliesModelFolder(ServiceModelFolder):
+    terra_type = "Model/Folder/Task/Apps/Twitter/Service/View/Replies"
+    
+    def __init__(self, name, parent):
+        ServiceModelFolder.__init__(self, name, parent)
+
+    def do_search(self):
+        statusList = twitter_manager.getReplies()
         return self.parse_entry_list(statusList)
     
 class SendModelFolder(ModelFolder):

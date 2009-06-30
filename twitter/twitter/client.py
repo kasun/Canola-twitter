@@ -34,6 +34,16 @@ class Client(object):
             raise TwitterError("No Network")
         except HTTPError:
             raise AuthError("Authentication failed")
+            
+    def getReplies(self):
+        try:
+            statuses = self.api.GetReplies()
+            lst = utils.getMessageList_from_statuses(statuses)
+            return lst
+        except URLError:
+            raise TwitterError("No Network")
+        except HTTPError:
+            raise AuthError("Authentication failed")
         
     def sendTweet(self,msg):
         try:

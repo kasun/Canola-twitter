@@ -8,7 +8,7 @@ import logging
 from terra.core.manager import Manager
 from terra.ui.base import PluginThemeMixin
 
-from model import SendModelFolder,ViewFriendsModelFolder,ViewPublicModelFolder
+from model import SendModelFolder,ViewFriendsModelFolder,ViewPublicModelFolder,ViewRepliesModelFolder
 
 manager = Manager()
 
@@ -28,7 +28,7 @@ class ListController(BaseListController):
     def cb_on_clicked(self, view, index):
         model = self.model.children[index]
         
-        if type(model) is ViewFriendsModelFolder or type(model) is ViewPublicModelFolder:
+        if type(model) is not SendModelFolder:
             BaseListController.cb_on_clicked(self, view, index)
             return
         
