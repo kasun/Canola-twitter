@@ -45,13 +45,13 @@ class MainModelFolder(ModelFolder, Task):
             ViewFriendsModelFolder("View Friend's Tweets",self)
             SendModelFolder("Send Tweet",self)
         
-class MessageModel(Model):
+class MessageModel(ModelFolder):
     '''Model for incoming messages'''
     
-    #terra_type = "Model/Task/Apps/Twitter/Message"
+    terra_type = "Model/Task/Apps/Twitter/Message"
     
     def __init__(self, name, parent):
-        Model.__init__(self,name,parent)
+        ModelFolder.__init__(self,name,parent)
         self.uname = None
         self.text = None
         self.thumb = None
