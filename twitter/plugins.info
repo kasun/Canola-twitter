@@ -4,6 +4,7 @@ enabled = True
 rank = 256
 filter_map = Controller/Folder/Task/Apps/Twitter - ListController
 	     Controller/Folder/Task/Apps/Twitter/Service - ServiceController
+	     Controller/Task/Apps/Twitter/Message - MessageController
 	     
 [Twitter Model]
 modname = twitter.model
