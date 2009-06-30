@@ -43,7 +43,7 @@ class ListController(BaseListController):
         
 class ServiceController(BaseListController, OptionsControllerMixin):
     terra_type = "Controller/Folder/Task/Apps/Twitter/Service"
-    row_renderer = RowRendererWidget
+    #row_renderer = RowRendererWidget
     #list_group = "list_video"
 
     def __init__(self, model, canvas, parent):
@@ -99,5 +99,13 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
 
 class RowRendererWidget(GeneralRowRenderer):
     row_group="list_item_twitter"
+    
+class MessageController(BaseListController):
+    
+    terra_type = "Controller/Task/Apps/Twitter/Message"
+    #row_renderer = RowRendererWidget
+
+    def cb_on_clicked(self, view, index):
+        return
         
         
