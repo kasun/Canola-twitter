@@ -2,4 +2,5 @@
 
 collections {
    #include "default_twitter.edc"
+   #include "default_icons.edc"
 }
