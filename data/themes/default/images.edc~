@@ -1,5 +1,0 @@
-images {
-    image: "images/shadow_album_art_small.png" COMP;
-    image: "images/sep_list_text.png" COMP;
-    image: "images/thumb.png" COMP;
-}
