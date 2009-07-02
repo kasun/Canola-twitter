@@ -21,6 +21,15 @@ def getUTF8String(str):
     #unicodeString = unicode(str,"ascii")
     return str.encode("utf8")
     
+def breakStringIntoLines(str):
+    if len(str) > 90:
+        words = str.split(' ')
+        numOfSpaces = len(words)
+        newText = " ".join(words[:numOfSpaces/2]) + "<br />" + " ".join(words[numOfSpaces/2 + 1:])
+        return newText
+    else:
+        return str
+    
 def get_thumb_path(id=None):
     prefs = PluginPrefs("twitter")
     try:
