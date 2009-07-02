@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+import urllib
 import logging
 
 from terra.core.manager import Manager
@@ -9,6 +11,7 @@ from terra.core.threaded_func import ThreadedFunction
 
 from manager import TwitterManager
 from client import AuthError, TwitterError
+import utils
 
 manager = Manager()
 CanolaError = manager.get_class("Model/Notify/Error")
@@ -46,20 +49,35 @@ class MainModelFolder(ModelFolder, Task):
             ViewRepliesModelFolder("@"+str(twitter_manager.getUserName()),self)
             SendModelFolder("Update my status",self)
         
-class MessageModel(ModelFolder):
+class MessageModel(Model):
     '''Model for incoming messages'''
     
     terra_type = "Model/Task/Apps/Twitter/Message"
     
     def __init__(self, name, parent):
-        ModelFolder.__init__(self,name,parent)
+        #Model.__init__(self,name,parent)
         self.uname = None
         self.text = None
+        self.thumb_url = None
         self.thumb = None
+        
+    def request_thumbnail(self, end_callback=None):
+        def request(*ignored):
+            urllib.urlretrieve(self.thumb_url, self.thumb)
+
+        def request_finished(exception, retval):
+            if end_callback:
+                end_callback()
+
+        if not self.thumb_url or os.path.exists(self.thumb):
+            if end_callback:
+                end_callback()
+        else:
+            ThreadedFunction(request_finished, request).start()
         
 class ServiceModelFolder(ModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service"
-    
+    threaded_search = True
     empty_msg = "Empty"
     
     def __init__(self, name, parent):
@@ -74,6 +92,11 @@ class ServiceModelFolder(ModelFolder):
         
     def search(self,end_callback=None):
         del self.children[:]
+        
+        if not self.threaded_search:
+            for c in self.do_search():
+                self.children.append(c)
+            return
         
         #if not self.threaded_search:
         #    for model in self.do_search():
@@ -105,8 +128,8 @@ class ServiceModelFolder(ModelFolder):
             for item in retval:
                 self.children.append(item)
 
-            #if end_callback:
-            #    end_callback()
+            if end_callback:
+                end_callback()
 
             #if self.callback_search_finished:
             #    self.callback_search_finished()
@@ -123,11 +146,12 @@ class ServiceModelFolder(ModelFolder):
         return [self._create_model_from_entry(item) for item in lst]
         
     def _create_model_from_entry(self, data):
-        display = data["uname"] + " : " + data["update"]
-        model = MessageModel(display,self)
+        
+        model = MessageModel("",self)
         model.uname = data["uname"]
         model.text = data["update"]
-        model.thumb = data["thumb_url"]
+        model.thumb_url = data["thumb_url"]
+        model.thumb = utils.get_thumb_path(data["uname"])
         return model
         
     
