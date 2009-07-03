@@ -15,6 +15,7 @@ class TwitterError(Exception):
 class Client(object):
     def __init__(self,uname=None,pword=None):
         self.api = twitter.Api()
+        #self.setUserAgent(self.api,"Canola")
         self.auth = False
         self.userName = None
         self.prefs = PluginPrefs("twitter")
@@ -58,7 +59,8 @@ class Client(object):
             
     def login(self,uname=None,pword=None):
         if not uname and not pword:
-            self.api = twitter.Api()
+            self.api.ClearCredentials()
+            #self.setUserAgent(self.api,"Canola")
             self.userName = None
             self.auth = False
             
@@ -67,7 +69,8 @@ class Client(object):
             except URLError:
                 raise TwitterError("No Network")
         else:
-            self.api = twitter.Api(username=uname,password=pword)
+            self.api.SetCredentials(username=uname,password=pword)
+            #self.setUserAgent(self.api,"Canola")
             
             try:
                 self.api.GetFriendsTimeline()
@@ -82,7 +85,8 @@ class Client(object):
         self.saveSettings(uname,pword)
     
     def logout(self):    
-        self.api = twitter.Api()
+        self.api.ClearCredentials()
+        #self.setUserAgent(self.api,"Canola")
         self.userName = None
         self.auth = False
         self.saveSettings(None,None)
@@ -105,3 +109,6 @@ class Client(object):
         
     def isLogged(self):
         return self.auth
+    
+    def setUserAgent(self,api,agent):
+        api.SetUserAgent(agent)
