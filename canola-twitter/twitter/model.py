@@ -42,7 +42,7 @@ class MainModelFolder(ModelFolder, Task):
     def do_load(self):
         #if True:
         #    return
-        
+        twitter_manager.loadSettings()
         ViewPublicModelFolder("View Public Timeline",self)
         if twitter_manager.isLogged():
             ViewFriendsModelFolder("Home",self)
