@@ -78,21 +78,24 @@ class Client(object):
                 
             self.userName = uname
             self.auth = True
+            
+        self.saveSettings(uname,pword)
     
     def logout(self):    
         self.api = twitter.Api()
         self.userName = None
         self.auth = False
+        self.saveSettings(None,None)
         
     def saveSettings(self,uname,pword):
-        prefs["twitter_username"] = uname
-        prefs["twitter_password"] = pword
-        prefs.save()
+        self.prefs["twitter_username"] = uname
+        self.prefs["twitter_password"] = pword
+        self.prefs.save()
         
     def loadSettings(self):
         try:
-            uname = prefs["twitter_username"]
-            pword = prefs["twitter_password"]
+            uname = self.prefs["twitter_username"]
+            pword = self.prefs["twitter_password"]
             self.login(uname,pword)
         except KeyError:
             return
