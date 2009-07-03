@@ -4,6 +4,8 @@ import utils
 from urllib2 import URLError
 from urllib2 import HTTPError
 
+from terra.core.plugin_prefs import PluginPrefs
+
 class AuthError(Exception):
     pass
 class TwitterError(Exception):
@@ -15,6 +17,7 @@ class Client(object):
         self.api = twitter.Api()
         self.auth = False
         self.userName = None
+        self.prefs = PluginPrefs("twitter")
         #self.login(uname,pword)
         
     def getPublicTimeline(self):
@@ -80,6 +83,19 @@ class Client(object):
         self.api = twitter.Api()
         self.userName = None
         self.auth = False
+        
+    def saveSettings(self,uname,pword):
+        prefs["twitter_username"] = uname
+        prefs["twitter_password"] = pword
+        prefs.save()
+        
+    def loadSettings(self):
+        try:
+            uname = prefs["twitter_username"]
+            pword = prefs["twitter_password"]
+            self.login(uname,pword)
+        except KeyError:
+            return
         
     def getUserName(self):
         return self.userName    
