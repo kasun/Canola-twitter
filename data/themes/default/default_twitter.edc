@@ -32,8 +32,8 @@ group{
                 mouse_events: 0;
                 description {
                     state: "default" 0.0;
-                    min: 120 10;
-                    max: 120 10;
+                    min: 100 10;
+                    max: 100 10;
                     rel1 {
                         relative: 0.0 1.0;
                         offset: 4 -5;
@@ -185,7 +185,7 @@ group{
                         relative: 1.0 0.0;
                         offset: -16 20;
                     }
-                    color: 255 255 255 255;
+                    color: 0 0 0 255;
                     text {
                         font, "Nokia Sans:style=Bold";
                         size: 20;
@@ -213,8 +213,33 @@ group{
                     color: 255 255 255 255;
                     text {
                         font, "Nokia Sans";
-                        size: 12;
+                        size: 14;
                         text: "Going home, enough hacking for today";
+                        align: 0.0 0.5;
+                    }
+                }
+            }
+            part {
+                name: "status_info";
+                type: TEXT;
+                clip_to: "clipper";
+                mouse_events: 0;
+                description {
+                    state: "default" 0.0;
+                    rel1 {
+                        relative: 1.0 0.0;
+                        offset: 10 100;
+                        to_x: "contents";
+                    }
+                    rel2 {
+                        relative: 1.0 0.0;
+                        offset: -16 20;
+                    }
+                    color: 205 205 193 127;
+                    text {
+                        font, "Nokia Sans";
+                        size: 10;
+                        text: "about 2 hours ago from the web";
                         align: 0.0 0.5;
                     }
                 }
