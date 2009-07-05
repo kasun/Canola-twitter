@@ -29,7 +29,7 @@ class UserPassController(ModalController):
         ModalController.__init__(self, model, canvas, parent)
         self.parent_controller = parent
         self.model = model
-        self.view = UsernamePasswordModal(parent, "Login to Twitter",parent.view.theme,vborder=50)
+        self.view = UsernamePasswordModal(parent, self.model.get_title(),parent.view.theme,vborder=50)
         self.view.callback_ok_clicked = self._on_ok_clicked
         self.view.callback_cancel_clicked = self.close
         self.view.callback_escape = self.close
@@ -66,6 +66,7 @@ class UserPassController(ModalController):
 
                 self.view.message("You are now logged in")
                 ecore.timer_add(1.5, cb_close)
+        
             elif isinstance(exception, AuthError):
                 self.view.message("Login error.<br>%s" % exception.message)
                 ecore.timer_add(1.5, cb_close)
