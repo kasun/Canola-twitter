@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 
 import os
+from xml.dom import minidom
 
 from terra.core.plugin_prefs import PluginPrefs
 
 def getDummyModel():
     return
 
-def getMessageList_from_statuses(statuses):
+def getMessageList_from_statuses(statuses): 
     messageList = []
     for s in statuses:
+        dic = s.AsDict()
         status = {};
         status["uname"] = getUTF8String(s.user.screen_name)
         status["update"] = getUTF8String(s.GetText())
-        status["info"] =  getUTF8String(s.GetRelativeCreatedAt())
+        status["info"] =  getUTF8String(s.GetRelativeCreatedAt() + " from " + getSourceFromXML(dic["source"]))
         status["thumb_url"] = getUTF8String(s.user.profile_image_url)
         messageList.append(status)
     return messageList
@@ -21,6 +23,16 @@ def getMessageList_from_statuses(statuses):
 def getUTF8String(str):
     #unicodeString = unicode(str,"ascii")
     return str.encode("utf8")
+    
+def getSourceFromXML(str):
+    try:
+        doc = minidom.parseString(str)
+        element=doc.firstChild
+        text=element.firstChild
+        source = text.data
+        return source
+    except Exception:
+        return str
     
 def breakStringIntoLines(str):
     if len(str) > 90:
