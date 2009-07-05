@@ -74,6 +74,7 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
         self._model = model
         self.part_text_set("user_id", model.uname)
         self.part_text_set("text", model.text)
+        self.part_text_set("status_info", model.info)
         
         model.request_thumbnail(self.cb_load_thumbnail)
         

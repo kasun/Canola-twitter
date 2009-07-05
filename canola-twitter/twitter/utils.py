@@ -13,6 +13,7 @@ def getMessageList_from_statuses(statuses):
         status = {};
         status["uname"] = getUTF8String(s.user.screen_name)
         status["update"] = getUTF8String(s.text)
+        status["info"] =  getUTF8String(s.created_at)
         status["thumb_url"] = getUTF8String(s.user.profile_image_url)
         messageList.append(status)
     return messageList

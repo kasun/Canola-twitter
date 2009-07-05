@@ -59,6 +59,7 @@ class MessageModel(Model):
         #Model.__init__(self,name,parent)
         self.uname = None
         self.text = None
+        self.info = None
         self.thumb_url = None
         self.thumb = None
         
@@ -151,6 +152,7 @@ class ServiceModelFolder(ModelFolder):
         model = MessageModel("",self)
         model.uname = data["uname"]
         model.text = data["update"]
+        model.info = data["info"]
         model.thumb_url = data["thumb_url"]
         model.thumb = utils.get_thumb_path(data["uname"])
         return model
