@@ -38,11 +38,12 @@ class MainModelFolder(ModelFolder, Task):
     def __init__(self, parent):
         Task.__init__(self)
         ModelFolder.__init__(self, "Twitter", parent)
+        twitter_manager.loadSettings()
 
     def do_load(self):
         #if True:
         #    return
-        twitter_manager.loadSettings()
+        
         ViewPublicModelFolder("View Public Timeline",self)
         if twitter_manager.isLogged():
             ViewFriendsModelFolder("Home",self)
