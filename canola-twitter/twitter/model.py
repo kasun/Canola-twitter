@@ -38,8 +38,13 @@ class MainModelFolder(ModelFolder, Task):
     def __init__(self, parent):
         Task.__init__(self)
         ModelFolder.__init__(self, "Twitter", parent)
-        twitter_manager.loadSettings()
-
+        try:
+            twitter_manager.loadSettings()
+        except AuthError:
+            return
+        except TwitterError:
+            return
+        
     def do_load(self):
         #if True:
         #    return
@@ -110,6 +115,9 @@ class ServiceModelFolder(ModelFolder):
 
         def refresh_finished(exception, retval):
             log.warning("search finished")
+            
+            if retval is None:
+                return
 
             if not self.is_loading:
                 log.info("model is not loading")
