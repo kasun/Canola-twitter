@@ -55,18 +55,19 @@ class MainModelFolder(ModelFolder, Task):
             ViewRepliesModelFolder("@"+str(twitter_manager.getUserName()),self)
             SendModelFolder("Update my status",self)
         
-class MessageModel(Model):
+class MessageModel(ModelFolder):
     '''Model for incoming messages'''
     
     terra_type = "Model/Task/Apps/Twitter/Message"
     
     def __init__(self, name, parent):
-        #Model.__init__(self,name,parent)
+        #ModelFolder.__init__(self,name,parent)
         self.uname = None
         self.text = None
         self.info = None
         self.thumb_url = None
         self.thumb = None
+        
         
     def request_thumbnail(self, end_callback=None):
         def request(*ignored):
