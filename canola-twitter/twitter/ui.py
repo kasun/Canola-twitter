@@ -68,6 +68,7 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
         
     def value_set(self, model):
         """Apply the model properties to the renderer."""
+        print "value setting 3"
         if not model or model is self._model:
             return
 
@@ -92,6 +93,7 @@ class ServiceController(BaseListController, OptionsControllerMixin):
     #list_group = "list_video"
 
     def __init__(self, model, canvas, parent):
+        print "controller init 4"
         self.empty_msg = model.empty_msg
         BaseListController.__init__(self, model, canvas, parent)
         OptionsControllerMixin.__init__(self)

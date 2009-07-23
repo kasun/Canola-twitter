@@ -61,12 +61,15 @@ class MessageModel(ModelFolder):
     terra_type = "Model/Task/Apps/Twitter/Message"
     
     def __init__(self, name, parent):
-        #ModelFolder.__init__(self,name,parent)
+        print "message model before init 1"
+        ModelFolder.__init__(self,name,parent)
         self.uname = None
         self.text = None
         self.info = None
         self.thumb_url = None
         self.thumb = None
+        print "message model after init 2"
+        
         
         
     def request_thumbnail(self, end_callback=None):
@@ -158,7 +161,7 @@ class ServiceModelFolder(ModelFolder):
         
     def _create_model_from_entry(self, data):
         
-        model = MessageModel("",self)
+        model = MessageModel(data["uname"],self)
         model.uname = data["uname"]
         model.text = data["update"]
         model.info = data["info"]
