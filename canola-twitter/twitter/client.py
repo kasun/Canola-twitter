@@ -18,6 +18,7 @@ class Client(object):
         self.setSourceAsCanola()
         self.auth = False
         self.userName = None
+        self.password = None
         self.prefs = PluginPrefs("twitter")
         #self.login(uname,pword)
         
@@ -60,8 +61,9 @@ class Client(object):
     def login(self,uname=None,pword=None):
         if not uname and not pword:
             self.api.ClearCredentials()
-            self.userName = None
             self.auth = False
+            self.userName = None
+            self.password = None
             
             try:
                 self.api.GetPublicTimeline()
@@ -76,16 +78,19 @@ class Client(object):
                 raise AuthError("Authentication failed")
             except URLError:
                 raise TwitterError("No Network")
-                
+            
+            self.auth = True    
             self.userName = uname
-            self.auth = True
+            self.password = pword
+            
             
         self.saveSettings(uname,pword)
     
     def logout(self):    
         self.api.ClearCredentials()
-        self.userName = None
         self.auth = False
+        self.userName = None
+        self.password = None
         self.saveSettings(None,None)
         
     def saveSettings(self,uname,pword):
@@ -102,7 +107,10 @@ class Client(object):
             return
         
     def getUserName(self):
-        return self.userName    
+        return self.userName
+    
+    def getPassWord(self):
+        return self.password
         
     def isLogged(self):
         return self.auth
