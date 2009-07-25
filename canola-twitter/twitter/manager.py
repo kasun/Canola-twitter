@@ -19,6 +19,4 @@ class TwitterManager(Singleton,Client):
         files = [('media',filename,imagedata)]
         
         self.twitpic_client.post_multipart(fields,files)
-        
-    #def uploadToTwitpic(self, filename, imagedata):
 
