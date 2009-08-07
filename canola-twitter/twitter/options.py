@@ -107,3 +107,38 @@ class TwitterReplyOptionsController(MixedListController):
         
     def callback_cancel(self, button):
         self.back()
+        
+class TwitterFavoriteOptionsController(MixedListController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Favorite"
+    
+    def __init__(self, model, canvas, parent):
+        MixedListController.__init__(self, model, canvas, parent)
+        self.view.button_add(label="No", func=self.callback_no)
+        self.view.button_add(label="Yes", func=self.callback_yes)
+        
+        
+    def callback_yes(self, button):
+        if self.model.callback_yes:
+            self.model.callback_yes()
+        self.back()
+        
+    def callback_no(self, button):
+        self.back()
+        
+class TwitterRetweetOptionsController(MixedListController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Retweet"
+    
+    def __init__(self, model, canvas, parent):
+        MixedListController.__init__(self, model, canvas, parent)
+        self.view.button_add(label="No", func=self.callback_no)
+        self.view.button_add(label="Yes", func=self.callback_yes)
+        
+        
+    def callback_yes(self, button):
+        if self.model.callback_yes:
+            self.model.callback_yes()
+        self.back()
+        
+    def callback_no(self, button):
+        self.back()
+
