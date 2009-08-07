@@ -20,10 +20,19 @@ OptionsControllerMixin = manager.get_class("OptionsControllerMixin")
 log = logging.getLogger("plugins.twitter.ui")
 
 class ListController(BaseListController):
-    """This is used to initialize the twitter navigation list.
-    Namely send tweets and recieve tweets"""
+    """This is used to initialize the twitter navigation list."""
     
     terra_type = "Controller/Folder/Task/Apps/Twitter"
+    
+    def __init__(self, model, canvas, parent):
+        BaseListController.__init__(self, model, canvas, parent)
+        #OptionsControllerMixin.__init__(self)
+        
+    '''def options_model_get(self):
+        try:
+            return self.model.options_model_get(self)
+        except:
+            return None'''
 
     def cb_on_clicked(self, view, index):
         model = self.model.children[index]
@@ -72,11 +81,11 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
             return
 
         self._model = model
-        self.part_text_set("user_id", model.uname)
-        self.part_text_set("text", model.text)
-        self.part_text_set("status_info", model.info)
+        self.part_text_set("user_id", "model.uname")
+        self.part_text_set("text", "model.text")
+        self.part_text_set("status_info", "model.info")
         
-        model.request_thumbnail(self.cb_load_thumbnail)
+        #model.request_thumbnail(self.cb_load_thumbnail)
         
     @evas.decorators.del_callback
     def __on_delete(self):
@@ -100,15 +109,70 @@ class ServiceController(BaseListController, OptionsControllerMixin):
     def _show_notify(self, err):
         """Popup a modal with a notify message."""
         self.parent.show_notify(err)
+        
+class GeneralStatusRenderer(PluginThemeMixin, BaseRowRenderer):
+    plugin = "twitter"
+
+    def __init__(self, parent, theme=None):
+        BaseRowRenderer.__init__(self, parent, theme)
+        self.image = self.evas.FilledImage()
+        self.part_swallow("contents", self.image)
+        self.signal_emit("thumb,hide", "")
+        
+    def theme_changed(self, end_callback=None):
+        def cb(*ignored):
+            self.part_swallow("contents", self.image)
+            if end_callback is not None:
+                end_callback(self)
+
+        BaseRowRenderer.theme_changed(self, cb)
+        
+    def cb_load_thumbnail(self):
+        try:
+            self.image.file_set(self._model.thumb)
+            self.signal_emit("thumb,show", "")
+        except Exception, e:
+            log.error("could not load image %r: %s", self._model.thumb_url, e)
+            self.signal_emit("thumb,hide", "")
+        
+    def value_set(self, model):
+        """Apply the model properties to the renderer."""
+        if not model or model is self._model:
+            return
+
+        self._model = model
+        self.part_text_set("user_id", model.uname)
+        self.part_text_set("text", model.text)
+        
+        model.request_thumbnail(self.cb_load_thumbnail)
+        
+    @evas.decorators.del_callback
+    def __on_delete(self):
+        """Free internal data on delete."""
+        self.image.delete()
+
+class StatusRendererWidget(GeneralStatusRenderer):
+    row_group="twitter_status"
 
 
+class MessageController(BaseListController, OptionsControllerMixin):
     
-class MessageController(BaseListController):
+    terra_type = "Controller/Folder/Task/Apps/Twitter/Message"
+    row_renderer = StatusRendererWidget
     
-    terra_type = "Controller/Task/Apps/Twitter/Message"
-    #row_renderer = RowRendererWidget
+    def __init__(self, model, canvas, parent):
+        BaseListController.__init__(self, model, canvas, parent)
+        OptionsControllerMixin.__init__(self)
+        self.model.callback_notify = self._show_notify
+        
+    def options_model_get(self):
+        try:
+            return self.model.options_model_get(self)
+        except:
+            return None
 
-    def cb_on_clicked(self, view, index):
-        return
+    def _show_notify(self, err):
+        """Popup a modal with a notify message."""
+        self.parent.show_notify(err)
         
         
