@@ -352,7 +352,18 @@ class TwitterOptionsModelFolder(OptionsModelFolder):
     
     def do_load(self):
         TwitterReplyOptionsModelFolder(self)
+        TwitterFavoriteOptionsModelFolder(self)
+        TwitterRetweetOptionsModelFolder(self)
     
 class TwitterReplyOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply"
     title = "Reply"
+    
+class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
+    title = "Mark Favorite"
+    
+class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Retweet"
+    title = "Retweet"
+
