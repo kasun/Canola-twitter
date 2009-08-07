@@ -12,6 +12,7 @@ from client import AuthError, TwitterError
 manager = Manager()
 twitter_manager = TwitterManager()
 
+OptionsController = manager.get_class("Controller/Options/Folder")
 ModalController = manager.get_class("Controller/Modal")
 UsernamePasswordModal = manager.get_class("Widget/Settings/UsernamePasswordModal")
 
@@ -19,7 +20,7 @@ MixedListController = manager.get_class("Controller/Settings/Folder/MixedList")
 
 log = logging.getLogger("plugins.twitter.options")
 
-class OptionsController(MixedListController):
+class SettingsController(MixedListController):
     terra_type = "Controller/Settings/Folder/InternetMedia/Twitter"
     
 class UserPassController(ModalController):
@@ -82,3 +83,10 @@ class UserPassController(ModalController):
         self.view.delete()
         self.view = None
         self.model = None
+        
+        
+#####################################################################################
+# Twitter options
+#####################################################################################
+
+
