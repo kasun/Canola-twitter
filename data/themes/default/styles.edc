@@ -1,0 +1,10 @@
+styles
+{
+  style {
+    name: "textblock_style";
+    base: "font=Nokia Sans font_size=30 align=left valign=bottom color=#fff wrap=word";
+
+    tag:  "mega_br"   "  \n \n";
+    tag:  "br"        "  \n";
+  }
+}
