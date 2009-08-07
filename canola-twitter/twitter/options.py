@@ -16,6 +16,8 @@ OptionsController = manager.get_class("Controller/Options/Folder")
 ModalController = manager.get_class("Controller/Modal")
 UsernamePasswordModal = manager.get_class("Widget/Settings/UsernamePasswordModal")
 
+EntryModal = manager.get_class("Widget/Settings/EntryModal")
+
 MixedListController = manager.get_class("Controller/Settings/Folder/MixedList")
 
 log = logging.getLogger("plugins.twitter.options")
@@ -89,4 +91,19 @@ class UserPassController(ModalController):
 # Twitter options
 #####################################################################################
 
-
+class TwitterReplyOptionsController(MixedListController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Reply"
+    
+    def __init__(self, model, canvas, parent):
+        MixedListController.__init__(self, model, canvas, parent)
+        self.view.button_add(label="Cancel", func=self.callback_cancel)
+        self.view.button_add(label="OK", func=self.callback_ok)
+        
+        
+    def callback_ok(self, button):
+        if self.model.callback_ok:
+            self.model.callback_ok()
+        self.back()
+        
+    def callback_cancel(self, button):
+        self.back()
