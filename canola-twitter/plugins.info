@@ -4,7 +4,7 @@ enabled = True
 rank = 256
 filter_map = Controller/Folder/Task/Apps/Twitter - ListController
 	     Controller/Folder/Task/Apps/Twitter/Service - ServiceController
-	     Controller/Task/Apps/Twitter/Message - MessageController
+	     Controller/Folder/Task/Apps/Twitter/Message - MessageController
 	     
 [Twitter Model]
 modname = twitter.model
@@ -15,12 +15,13 @@ filter_map = Icon/Folder/Task/Apps/Twitter - Icon
 	     Model/Folder/Task/Apps/Twitter/Service/View/Public - ViewPublicModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Friends - ViewFriendsModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Replies - ViewRepliesModelFolder
-	     Model/Settings/Folder/InternetMedia/Twitter - OptionsModel
+	     Model/Settings/Folder/InternetMedia/Twitter - SettingsModel
 	     Model/Settings/Folder/InternetMedia/Twitter/UserPass - UserPassOptionsModel
+	     Model/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsModelFolder
 	     
 [Twitter Options]
 modname = twitter.options
 enabled = True
 rank = 256
-filter_map = Controller/Settings/Folder/InternetMedia/Twitter - OptionsController
+filter_map = Controller/Settings/Folder/InternetMedia/Twitter - SettingsController
 	     Controller/Settings/Folder/InternetMedia/Twitter/UserPass - UserPassController
