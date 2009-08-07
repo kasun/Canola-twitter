@@ -14,6 +14,7 @@ from client import AuthError, TwitterError
 import utils
 
 manager = Manager()
+OptionsModelFolder = manager.get_class("Model/Options/Folder")
 CanolaError = manager.get_class("Model/Notify/Error")
 network = manager.get_status_notifier("Network")
 twitter_manager = TwitterManager()
@@ -45,6 +46,9 @@ class MainModelFolder(ModelFolder, Task):
         except TwitterError:
             return
         
+    '''def options_model_get(self, controller):
+        return MainOptionsModelFolder(None, controller)'''
+        
     def do_load(self):
         #if True:
         #    return
@@ -54,19 +58,48 @@ class MainModelFolder(ModelFolder, Task):
             ViewFriendsModelFolder("Home",self)
             ViewRepliesModelFolder("@"+str(twitter_manager.getUserName()),self)
             SendModelFolder("Update my status",self)
+            
+class StatusModel(Model):
+    '''model for statuses'''
+    
+    terra_type = "Model/Task/Apps/Twitter/Message/Status"
+    
+    def __init__(self, name, parent):
+        #Model.__init__(self,name,parent)
+        self.name = ''
+        self.uname = None
+        self.text = None
+        self.thumb_url = None
+        self.thumb = None
+        
+    def request_thumbnail(self, end_callback=None):
+        def request(*ignored):
+            urllib.urlretrieve(self.thumb_url, self.thumb)
+
+        def request_finished(exception, retval):
+            if end_callback:
+                end_callback()
+
+        if not self.thumb_url or os.path.exists(self.thumb):
+            if end_callback:
+                end_callback()
+        else:
+            ThreadedFunction(request_finished, request).start()
         
 class MessageModel(ModelFolder):
     '''Model for incoming messages'''
     
-    terra_type = "Model/Task/Apps/Twitter/Message"
+    terra_type = "Model/Folder/Task/Apps/Twitter/Message"
+    empty_msg = "Empty"
     
     def __init__(self, name, parent):
-        #ModelFolder.__init__(self,name,parent)
+        ModelFolder.__init__(self,name,parent)
         self.uname = None
         self.text = None
         self.info = None
         self.thumb_url = None
         self.thumb = None
+        self.is_deletable = False
         
         
     def request_thumbnail(self, end_callback=None):
@@ -82,6 +115,30 @@ class MessageModel(ModelFolder):
                 end_callback()
         else:
             ThreadedFunction(request_finished, request).start()
+            
+    def options_model_get(self, controller):
+        return TwitterOptionsModelFolder(None,controller)
+        
+    def do_load(self):
+        self.search()
+        
+    def search(self,end_callback=None):
+        del self.children[:]
+        
+        status_model = self.create_model()
+        self.children.append(status_model)
+        
+    def create_model(self):
+        model = StatusModel('Status',self)
+        model.uname = self.uname
+        model.text = self.text
+        model.thumb_url = self.thumb_url
+        model.thumb = self.thumb
+        
+        return model
+    
+    def options_model_get(self, controller):
+        return TwitterOptionsModelFolder(None, controller)
         
 class ServiceModelFolder(ModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service"
@@ -213,10 +270,10 @@ class SendModelFolder(ModelFolder):
         twitter_manager.sendTweet(text)
     
 ################################################################################
-# twitter Options Model
+# twitter settings Models
 ################################################################################
 
-class OptionsModel(ModelFolder):
+class SettingsModel(ModelFolder):
     terra_type = "Model/Settings/Folder/InternetMedia/Twitter"
     title = "Twitter"
 
@@ -271,3 +328,31 @@ class UserPassOptionsModel(MixedListItemDual):
         
     def logout(self):
         twitter_manager.logout()
+        
+################################################################################
+# twitter options Models
+################################################################################
+
+'''class MainOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter"
+    title = "options"
+
+    def __init__(self, parent, screen_controller=None):
+        OptionsModelFolder.__init__(self, parent, screen_controller)
+    
+    def do_load(self):
+        TwitterOptionsModelFolder(self)'''
+    
+class TwitterOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message"
+    title = "Options"
+    
+    def __init__(self, parent, screen_controller=None):
+        OptionsModelFolder.__init__(self, parent, screen_controller)
+    
+    def do_load(self):
+        TwitterReplyOptionsModelFolder(self)
+    
+class TwitterReplyOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply"
+    title = "Reply"
