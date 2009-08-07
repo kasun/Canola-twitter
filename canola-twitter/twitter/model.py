@@ -11,6 +11,7 @@ from terra.core.threaded_func import ThreadedFunction
 
 from manager import TwitterManager
 from client import AuthError, TwitterError
+from renderers import TextBoxItemRenderer, MessageItemRenderer
 import utils
 
 manager = Manager()
@@ -361,12 +362,63 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
     
     def callback_ok(self):
         print 'ok pressed'
+        
+    def do_load(self):
+        TwitterReplyTextModelFolder(self)
     
 class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
     title = "Mark Favorite"
     
+    def callback_yes(self):
+        print 'yes pressed'
+        
+    def do_load(self):
+        TwitterFavoriteMessageModelFolder(self)
+    
 class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Retweet"
     title = "Retweet"
+
+    def callback_yes(self):
+        print 'yes pressed'
+        
+    def do_load(self):
+        TwitterRetweetMessageModelFolder(self)
+
+class MixedListItemTextBox(ModelFolder):
+    ''' Model for text box'''
+    terra_type = "Model/Settings/Folder/MixedList/Item/TextBlock"
+    label = ""
+
+    def __init__(self, parent=None):
+        ModelFolder.__init__(self, self.label, parent)
+        self.renderer = TextBoxItemRenderer(label=self.label)
+
+    def do_load(self):
+        pass
+    
+class MixedListItemMessage(ModelFolder):
+    ''' Model for Message'''
+    terra_type = "Model/Settings/Folder/MixedList/Item/Message"
+    label = ""
+
+    def __init__(self, parent=None):
+        ModelFolder.__init__(self, self.label, parent)
+        self.renderer = MessageItemRenderer(label=self.label)
+
+    def do_load(self):
+        pass
+    
+class TwitterReplyTextModelFolder(MixedListItemTextBox):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply/Text"
+    label = "Task name:"
+    
+class TwitterFavoriteMessageModelFolder(MixedListItemMessage):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite/Message"
+    label = "<font size=16>Are you sure you want to Favorite this?</font>"
+    
+class TwitterRetweetMessageModelFolder(MixedListItemMessage):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Retweet/Message"
+    label = "Are you sure you want to Retweet this?"
 
