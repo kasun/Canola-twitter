@@ -25,3 +25,6 @@ enabled = True
 rank = 256
 filter_map = Controller/Settings/Folder/InternetMedia/Twitter - SettingsController
 	     Controller/Settings/Folder/InternetMedia/Twitter/UserPass - UserPassController
+             Controller/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsController
+             Controller/Options/Folder/Apps/Twitter/Message/Favorite - TwitterFavoriteOptionsController
+             Controller/Options/Folder/Apps/Twitter/Message/Retweet - TwitterRetweetOptionsController
