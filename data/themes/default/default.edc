@@ -1,4 +1,5 @@
 #include "images.edc"
+#include "styles.edc"
 
 collections {
    #include "default_twitter.edc"
