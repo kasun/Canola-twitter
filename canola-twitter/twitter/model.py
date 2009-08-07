@@ -359,6 +359,9 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply"
     title = "Reply"
     
+    def callback_ok(self):
+        print 'ok pressed'
+    
 class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
     title = "Mark Favorite"
