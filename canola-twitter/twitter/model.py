@@ -364,7 +364,7 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
         print 'ok pressed'
         
     def do_load(self):
-        TwitterReplyTextModelFolder(self)
+        TwitterReplyTextModelFolder('@kasunh01', self)
     
 class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
@@ -389,11 +389,10 @@ class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
 class MixedListItemTextBox(ModelFolder):
     ''' Model for text box'''
     terra_type = "Model/Settings/Folder/MixedList/Item/TextBlock"
-    label = ""
 
-    def __init__(self, parent=None):
-        ModelFolder.__init__(self, self.label, parent)
-        self.renderer = TextBoxItemRenderer(label=self.label)
+    def __init__(self, label, parent=None):
+        ModelFolder.__init__(self, label, parent)
+        self.renderer = TextBoxItemRenderer(label=label)
 
     def do_load(self):
         pass
@@ -412,7 +411,9 @@ class MixedListItemMessage(ModelFolder):
     
 class TwitterReplyTextModelFolder(MixedListItemTextBox):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply/Text"
-    label = "Task name:"
+    
+    def __init__(self, label, parent=None):
+        MixedListItemTextBox.__init__(self, label, parent)
     
 class TwitterFavoriteMessageModelFolder(MixedListItemMessage):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite/Message"
