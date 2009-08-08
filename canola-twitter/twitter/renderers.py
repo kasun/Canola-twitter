@@ -15,14 +15,19 @@ class TextBoxItemRenderer(etk.KineticRenderer, TerraObject):
         self.kargs = ka
 
     def create_cell(self, canvas):
-        self.entry = etk.Entry(text=self.label)
+        #self.entry = etk.Entry(text=self.label)
         #self.entry = etk.Textblock(text="")
-
+        self.entry = etk.TextView()
+        self.entry.size_request_set(150,300)
+        self.entry.textblock_get().text_set(self.label,10)
+        self.entry.show()
+        
         label = etk.Label(self.label)
         label.alignment_set(0.0, 0.0)
 
         vbox = etk.VBox()
         vbox.border_width_set(0)
+        vbox.size_request_set(150,300)
         #vbox.append(label, etk.VBox.START, etk.VBox.FILL, 0)
         vbox.append(self.entry, etk.VBox.START, etk.VBox.FILL, 0)
 
@@ -45,6 +50,9 @@ class TextBoxItemRenderer(etk.KineticRenderer, TerraObject):
         cell.resize(w - 40, h - 10)
         cell.move(int(x + 5), int(y + 5))
         cell.show()
+        
+    def getText(self):
+        return self.entry.textblock_get().text_get(0)
         
 class MessageItemRenderer(etk.KineticRenderer, TerraObject):
     terra_type = "Renderer/EtkList/LabeledEntryItem"
