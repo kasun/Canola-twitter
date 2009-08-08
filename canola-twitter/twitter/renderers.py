@@ -15,7 +15,7 @@ class TextBoxItemRenderer(etk.KineticRenderer, TerraObject):
         self.kargs = ka
 
     def create_cell(self, canvas):
-        self.entry = etk.Entry(text="")
+        self.entry = etk.Entry(text=self.label)
         #self.entry = etk.Textblock(text="")
 
         label = etk.Label(self.label)
