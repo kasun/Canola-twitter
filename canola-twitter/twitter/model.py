@@ -356,8 +356,11 @@ class TwitterOptionsModelFolder(OptionsModelFolder):
         
     def do_load(self):
         TwitterReplyOptionsModelFolder(self, self.status_user_id)
-        TwitterFavoriteOptionsModelFolder(self)
+        #TwitterFavoriteOptionsModelFolder(self)
         TwitterRetweetOptionsModelFolder(self, self.status_user_id, self.status_text)
+        
+        if(self.status_user_id == twitter_manager.getUserName()):
+            TwitterDeleteOptionsModelFolder(self)
     
 class TwitterReplyOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply"
@@ -367,24 +370,22 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
         OptionsModelFolder.__init__(self, parent)
         self.user_id = user_id
         
-    def callback_ok(self):
-        reply = self.children[0].getText()
-        
-        if reply is not None:
-            twitter_manager.sendTweet(reply)
+    def reply(self, reply):
+        twitter_manager.sendTweet(reply)
         
     def do_load(self):
-        TwitterReplyTextModelFolder('@' + self.user_id + ' ', self)
+        #TwitterReplyTextModelFolder('@' + self.user_id + ' ', self)
+        pass
     
 class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
     title = "Mark Favorite"
     
-    def callback_yes(self):
-        print 'yes pressed'
+    
         
     def do_load(self):
-        TwitterFavoriteMessageModelFolder(self)
+        #TwitterFavoriteMessageModelFolder(self)
+        pass
     
 class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Retweet"
@@ -395,12 +396,24 @@ class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
         self.user_id = user_id
         self.status_text = status_text
 
-    def callback_yes(self):
+    def retweet(self):
         retweetMessage = 'RT: @' + self.user_id + ' ' + self.status_text
         twitter_manager.sendTweet(retweetMessage)
         
     def do_load(self):
-        TwitterRetweetMessageModelFolder(self)
+        #TwitterRetweetMessageModelFolder(self)
+        pass
+    
+class TwitterDeleteOptionsModelFolder(OptionsModelFolder):
+    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Delete"
+    title = "Delete Status"
+    
+    def __init__(self, parent, status_id):
+        OptionsModelFolder.__init__(self, parent)
+        self.status_id = status_id
+
+    def deleteStatus(self):
+        twitter_manager.deleteStatus(self.status_id)
 
 class MixedListItemTextBox(ModelFolder):
     ''' Model for text box'''

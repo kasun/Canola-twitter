@@ -9,6 +9,8 @@ from terra.core.threaded_func import ThreadedFunction
 from manager import TwitterManager
 from client import AuthError, TwitterError
 
+from renderers import SetReplyView, ConfirmDialogView
+
 manager = Manager()
 twitter_manager = TwitterManager()
 
@@ -91,7 +93,7 @@ class UserPassController(ModalController):
 # Twitter options
 #####################################################################################
 
-class TwitterReplyOptionsController(MixedListController):
+'''class TwitterReplyOptionsController(MixedListController):
     terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Reply"
     
     def __init__(self, model, canvas, parent):
@@ -140,5 +142,99 @@ class TwitterRetweetOptionsController(MixedListController):
         self.back()
         
     def callback_no(self, button):
-        self.back()
+        self.back()'''
+        
+class TwitterReplyOptionsController(ModalController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Reply"
+
+    def __init__(self, model, canvas, parent):
+        ModalController.__init__(self, model, canvas, parent)
+        self.model = model
+        self.parent = parent
+        self.view = SetReplyView(model.user_id, parent.last_panel, model.title, None)
+
+        self.view.callback_ok_clicked = self._on_ok_clicked
+        self.view.callback_cancel_clicked = self.close
+        self.view.callback_escape = self.close
+        self.view.show()
+
+    def close(self):
+        def cb(*ignored):
+            self.back()
+            self.parent.back()
+        self.view.hide(end_callback=cb)
+
+    def _on_ok_clicked(self, reply):
+            
+        self.reply = reply
+        self.view.hide()
+        self.model.reply(reply)
+        #self.view = MessageView(self.parent.last_panel, "please wait")
+        #self.view.message()
+        #ThreadedFunction(th_finished, th_function).start()
+
+    def delete(self):
+        self.view.delete()
+        self.view = None
+        self.model = None
+        
+class TwitterRetweetOptionsController(ModalController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Retweet"
+    
+    def __init__(self, model, canvas, parent):
+        ModalController.__init__(self, model, canvas, parent)
+        self.model = model
+        self.parent = parent
+        label = 'Are you sure you <br>want to retweet this <br>status?'
+        self.view = ConfirmDialogView(label, parent.last_panel, model.title, None)
+
+        self.view.callback_yes_clicked = self._on_yes_clicked
+        self.view.callback_no_clicked = self.close
+        self.view.callback_escape = self.close
+        self.view.show()
+
+    def close(self):
+        def cb(*ignored):
+            self.back()
+            self.parent.back()
+        self.view.hide(end_callback=cb)
+
+    def _on_yes_clicked(self):
+        self.view.hide()
+        self.model.retweet()
+
+    def delete(self):
+        self.view.delete()
+        self.view = None
+        self.model = None
+        
+class TwitterDeleteOptionsController(ModalController):
+    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Delete"
+    
+    def __init__(self, model, canvas, parent):
+        ModalController.__init__(self, model, canvas, parent)
+        self.model = model
+        self.parent = parent
+        label = 'Are you sure you <br>want to delete this <br>status?'
+        self.view = ConfirmDialogView(label, parent.last_panel, model.title, None)
+
+        self.view.callback_yes_clicked = self._on_yes_clicked
+        self.view.callback_no_clicked = self.close
+        self.view.callback_escape = self.close
+        self.view.show()
+
+    def close(self):
+        def cb(*ignored):
+            self.back()
+            self.parent.back()
+        self.view.hide(end_callback=cb)
+
+    def _on_yes_clicked(self):
+        self.view.hide()
+        self.model.deleteStatus()
+
+    def delete(self):
+        self.view.delete()
+        self.view = None
+        self.model = None
 
