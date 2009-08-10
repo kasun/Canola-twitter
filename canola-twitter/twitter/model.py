@@ -95,6 +95,7 @@ class MessageModel(ModelFolder):
     
     def __init__(self, name, parent):
         ModelFolder.__init__(self,name,parent)
+        self.id = None
         self.uname = None
         self.text = None
         self.info = None
@@ -217,6 +218,7 @@ class ServiceModelFolder(ModelFolder):
     def _create_model_from_entry(self, data):
         
         model = MessageModel("",self)
+        model.id = data["id"]
         model.uname = data["uname"]
         model.text = data["update"]
         model.info = data["info"]
@@ -353,6 +355,7 @@ class TwitterOptionsModelFolder(OptionsModelFolder):
         parent_model = screen_controller.model
         self.status_user_id = parent_model.uname
         self.status_text = parent_model.text
+        self.status_id = parent_model.id
         
     def do_load(self):
         TwitterReplyOptionsModelFolder(self, self.status_user_id)
@@ -360,7 +363,7 @@ class TwitterOptionsModelFolder(OptionsModelFolder):
         TwitterRetweetOptionsModelFolder(self, self.status_user_id, self.status_text)
         
         if(self.status_user_id == twitter_manager.getUserName()):
-            TwitterDeleteOptionsModelFolder(self)
+            TwitterDeleteOptionsModelFolder(self, self.status_id)
     
 class TwitterReplyOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply"
