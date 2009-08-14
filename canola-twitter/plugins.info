@@ -28,3 +28,9 @@ filter_map = Controller/Settings/Folder/InternetMedia/Twitter - SettingsControll
              Controller/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsController
              Controller/Options/Folder/Apps/Twitter/Message/Retweet - TwitterRetweetOptionsController
              Controller/Options/Folder/Apps/Twitter/Message/Delete - TwitterDeleteOptionsController
+
+[Twitter Manager]
+modname = twitter.manager
+enabled = True
+rank = 256
+filter_map = Manager/Twitter - TwitterManager
