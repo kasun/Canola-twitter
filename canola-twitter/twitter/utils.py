@@ -13,6 +13,7 @@ def getMessageList_from_statuses(statuses):
     for s in statuses:
         dic = s.AsDict()
         status = {};
+        status["id"] = s.id
         status["uname"] = getUTF8String(s.user.screen_name)
         status["update"] = getUTF8String(s.GetText())
         status["info"] =  getUTF8String(s.GetRelativeCreatedAt() + " from " + getSourceFromXML(dic["source"]))
@@ -60,3 +61,31 @@ def get_thumb_path(id=None):
         path = os.path.join(path, "%s.jpg" % id)
 
     return path
+
+def getStatusFromTwitpicResponse(response):
+    doc = minidom.parseString(response)
+    element=doc.firstChild
+    
+    if((element.getAttribute('stat') or element.getAttribute('status')) == 'ok'):
+        return 'ok'
+    else:
+        error = element.childNodes[1]
+        return error.getAttribute('msg')
+        
+
+if __name__ == '__main__':
+    res = '<?xml version="1.0" encoding="UTF-8"?> \
+    <rsp status="ok"> \
+    <statusid>3283227129</statusid> \
+    <userid>53358552</userid> \
+    <mediaid>dpn7l</mediaid> \
+    <mediaurl>http://twitpic.com/dpn7l</mediaurl> \
+    </rsp>'
+    
+    '''res = '<?xml version="1.0" encoding="UTF-8"?> \
+    <rsp stat="fail"> \
+    <err code="1001" msg="Invalid twitter username or password" /> \
+    </rsp>' '''
+
+    print getStatusFromTwitpicResponse(res)
+

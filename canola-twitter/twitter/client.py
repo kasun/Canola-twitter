@@ -8,6 +8,7 @@ from terra.core.plugin_prefs import PluginPrefs
 
 class AuthError(Exception):
     pass
+    
 class TwitterError(Exception):
     pass
     
@@ -45,6 +46,14 @@ class Client(object):
             statuses = self.api.GetReplies()
             lst = utils.getMessageList_from_statuses(statuses)
             return lst
+        except URLError:
+            raise TwitterError("No Network")
+        except HTTPError:
+            raise AuthError("Authentication failed")
+            
+    def deleteStatus(self, id):
+        try:
+            statuses = self.api.DestroyStatus(id)
         except URLError:
             raise TwitterError("No Network")
         except HTTPError:

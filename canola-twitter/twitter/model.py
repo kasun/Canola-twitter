@@ -11,7 +11,7 @@ from terra.core.threaded_func import ThreadedFunction
 
 from manager import TwitterManager
 from client import AuthError, TwitterError
-from renderers import TextBoxItemRenderer, MessageItemRenderer
+
 import utils
 
 manager = Manager()
@@ -66,7 +66,7 @@ class StatusModel(Model):
     terra_type = "Model/Task/Apps/Twitter/Message/Status"
     
     def __init__(self, name, parent):
-        #Model.__init__(self,name,parent)
+        Model.__init__(self,name,parent)
         self.name = ''
         self.uname = None
         self.text = None
@@ -417,44 +417,6 @@ class TwitterDeleteOptionsModelFolder(OptionsModelFolder):
 
     def deleteStatus(self):
         twitter_manager.deleteStatus(self.status_id)
-
-class MixedListItemTextBox(ModelFolder):
-    ''' Model for text box'''
-    terra_type = "Model/Settings/Folder/MixedList/Item/TextBlock"
-
-    def __init__(self, label, parent=None):
-        ModelFolder.__init__(self, label, parent)
-        self.renderer = TextBoxItemRenderer(label=label)
-
-    def do_load(self):
-        pass
-
-    def getText(self):
-        return self.renderer.getText()
     
-class MixedListItemMessage(ModelFolder):
-    ''' Model for Message'''
-    terra_type = "Model/Settings/Folder/MixedList/Item/Message"
-    label = ""
 
-    def __init__(self, parent=None):
-        ModelFolder.__init__(self, self.label, parent)
-        self.renderer = MessageItemRenderer(label=self.label)
-
-    def do_load(self):
-        pass
-    
-class TwitterReplyTextModelFolder(MixedListItemTextBox):
-    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Reply/Text"
-    
-    def __init__(self, label, parent=None):
-        MixedListItemTextBox.__init__(self, label, parent)
-    
-class TwitterFavoriteMessageModelFolder(MixedListItemMessage):
-    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite/Message"
-    label = "<font_size=20>Are you sure you want to <br>mark this status as Favorite?</font_size>"
-    
-class TwitterRetweetMessageModelFolder(MixedListItemMessage):
-    terra_type = "Model/Options/Folder/Apps/Twitter/Message/Retweet/Message"
-    label = "<font_size=20>Are you sure you want to <br>Retweet this?</font_size>"
 
