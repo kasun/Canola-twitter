@@ -72,6 +72,27 @@ def getStatusFromTwitpicResponse(response):
         error = element.childNodes[1]
         return error.getAttribute('msg')
         
+def getNameFromPath(path):
+    '''Method to get the filename from a filepath'''
+    
+    parts = path.split('/')
+    return parts[-1]
+    
+def getImageDataFromPath(path):
+    '''Method to get imagedata from file path'''
+    
+    image = None
+    
+    try:
+        image = open(path)
+        imagedata = image.read()
+        image.close()
+        return imagedata
+    except:
+        image.close()
+        return None
+    
+        
 
 if __name__ == '__main__':
     res = '<?xml version="1.0" encoding="UTF-8"?> \

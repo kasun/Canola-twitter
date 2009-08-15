@@ -428,6 +428,72 @@ class TwitterDeleteOptionsModelFolder(OptionsModelFolder):
 
     def deleteStatus(self):
         twitter_manager.deleteStatus(self.status_id)
+        
+#####################################################################################
+# Twitpic options model
+#####################################################################################
     
-
+class TwitpicOptionsModel(OptionsModelFolder):
+    '''Options model for twitpic'''
+    
+    terra_type = "Model/Options/Folder/Image/Fullscreen/Submenu/Twitpic"
+    title = "Upload in TwitPic"
+    
+    def __init__(self, parent=None):
+        OptionsModelFolder.__init__(self, parent)
+        self.parent_model = parent
+        
+    def uploadToTwitpic(self, message):
+        
+        #get the path of the current image represented by ImageLocalModel
+        '''filepath = self.parent_model.getCurrentImagePath()
+        
+        filename = utils.getNameFromPath(filepath)
+        
+        imagedata = utils.getImageDataFromPath(filepath)'''
+        
+        currentImageItemFullScreen = self.parent_model.screen_controller.view.image_frame_cur
+        
+        currentEvas = currentImageItemFullScreen.image
+        
+        #TO DO
+        #Load image data from evas
+        
+        filepath = currentEvas.file_get()
+        
+        if filepath is None:
+            return None
+        
+        filename = utils.getNameFromPath(filepath[0])
+        
+        imagedata = utils.getImageDataFromPath(filepath[0])
+        
+        return twitter_manager.uploadToTwitpic(filename, imagedata, message)
+        
+    def uploadToTwitpicAndPostToTwitter(self, message):
+        
+        #get the path of the current image represented by ImageLocalModel
+        '''filepath = self.parent_model.getCurrentImagePath()
+        
+        filename = utils.getNameFromPath(filepath)
+        
+        imagedata = utils.getImageDataFromPath(filepath)'''
+        
+        #TO DO
+        #Load image data from evas
+        
+        currentImageItemFullScreen = self.parent_model.screen_controller.view.image_frame_cur
+        
+        currentEvas = currentImageItemFullScreen.image
+        
+        filepath = currentEvas.file_get()
+        
+        if filepath is None:
+            return None
+        
+        filename = utils.getNameFromPath(filepath[0])
+        
+        imagedata = utils.getImageDataFromPath(filepath[0])
+        
+        return twitter_manager.uploadToTwitpicAndPostToTwitter(filename, imagedata, message)
 

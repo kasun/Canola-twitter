@@ -36,10 +36,11 @@ class SetReplyView(Modal):
 
         self.modal_contents = PanelContentFrame(self.evas)
         self.modal_contents.frame.add(vbox)
-        self.ok_button = self.modal_contents.button_add("OK")
-        self.ok_button.on_clicked(self._on_button_clicked)
         self.cancel_button = self.modal_contents.button_add("  Cancel  ")
         self.cancel_button.on_clicked(self._on_button_clicked)
+        self.ok_button = self.modal_contents.button_add("OK")
+        self.ok_button.on_clicked(self._on_button_clicked)
+        
         self.contents_set(self.modal_contents.object)
 
     def _on_ok_clicked(self):
@@ -76,10 +77,11 @@ class ConfirmDialogView(Modal):
 
         self.modal_contents = PanelContentFrame(self.evas)
         self.modal_contents.frame.add(vbox)
-        self.yes_button = self.modal_contents.button_add("Yes")
-        self.yes_button.on_clicked(self._on_button_clicked)
         self.no_button = self.modal_contents.button_add("No")
         self.no_button.on_clicked(self._on_button_clicked)
+        self.yes_button = self.modal_contents.button_add("Yes")
+        self.yes_button.on_clicked(self._on_button_clicked)
+        
         self.contents_set(self.modal_contents.object)
 
     def _on_yes_clicked(self):
@@ -91,6 +93,115 @@ class ConfirmDialogView(Modal):
         elif bt == self.no_button:
             if self.callback_no_clicked:
                 self.callback_no_clicked()
+
+    @evas.decorators.del_callback
+    def _destroy_contents(self):
+        self.modal_contents.destroy()
+        
+class SetMessageView(Modal):
+    ''' Modal to enter message to upload to twitpic'''
+    
+    def __init__(self, parent, title, old_value, theme=None):
+        Modal.__init__(self, parent.view, title, theme,
+                       hborder=16, vborder=50)
+        self.callback_ok_clicked = None
+        self.callback_cancel_clicked = None
+        self.callback_escape = None
+
+        label = etk.Label("Message")
+        label.alignment_set(0.0, 1.0)
+        label.show()
+
+        self.entry = etk.TextView()
+
+        self.entry.size_request_set(150,150)
+        self.entry.show()
+
+
+        vbox = etk.VBox()
+        vbox.border_width_set(25)
+        vbox.append(label, etk.VBox.START, etk.VBox.FILL, 0)
+        vbox.append(self.entry, etk.VBox.START, etk.VBox.EXPAND, 0)
+        vbox.show()
+
+        self.modal_contents = PanelContentFrame(self.evas)
+        self.modal_contents.frame.add(vbox)
+        self.cancel_button = self.modal_contents.button_add("  Cancel  ")
+        self.cancel_button.on_clicked(self._on_button_clicked)
+        self.ok_button = self.modal_contents.button_add("OK")
+        self.ok_button.on_clicked(self._on_button_clicked)
+        self.contents_set(self.modal_contents.object)
+
+    def _on_ok_clicked(self):
+        text = self.entry.textblock_get().text_get(0)
+        self.callback_ok_clicked(text)
+
+    def _on_button_clicked(self, bt):
+        if bt == self.ok_button:
+            self._on_ok_clicked()
+        elif bt == self.cancel_button:
+            if self.callback_cancel_clicked:
+                self.callback_cancel_clicked()
+
+    @evas.decorators.del_callback
+    def _destroy_contents(self):
+        self.modal_contents.destroy()
+        
+class ResultMessageView(Modal):
+    '''Modal to display the result of uploading to twitpic'''
+    
+    def __init__(self, parent, title, old_value, message, theme=None):
+        Modal.__init__(self, parent.view, title, theme,
+                       hborder=16, vborder=50)
+        self.callback_ok_clicked = None
+        self.callback_escape = None
+
+        label = etk.Label('<center><font_size=20> ' + message + ' <font_size><center>')
+        label.alignment_set(0.5, 0.5)
+        label.show()
+
+        vbox = etk.VBox()
+        vbox.border_width_set(25)
+        vbox.append(label, etk.VBox.START, etk.VBox.FILL, 0)
+        vbox.show()
+
+        self.modal_contents = PanelContentFrame(self.evas)
+        self.modal_contents.frame.add(vbox)
+        self.ok_button = self.modal_contents.button_add("Ok")
+        self.ok_button.on_clicked(self._on_button_clicked)
+        self.contents_set(self.modal_contents.object)
+
+    def _on_ok_clicked(self):
+        self.callback_ok_clicked()
+
+    def _on_button_clicked(self, bt):
+        if bt == self.ok_button:
+            self._on_ok_clicked()
+
+    @evas.decorators.del_callback
+    def _destroy_contents(self):
+        self.modal_contents.destroy()
+        
+class WaitMessageView(Modal):
+    '''Modal to display the wait message till image is uploaded'''
+    
+    def __init__(self, parent, title, old_value, message, theme=None):
+        Modal.__init__(self, parent.view, title, theme,
+                       hborder=16, vborder=50)
+        self.callback_escape = None
+
+        label = etk.Label('<center><font_size=20> ' + message + ' <font_size><center>')
+        label.alignment_set(0.5, 0.5)
+        label.show()
+
+        vbox = etk.VBox()
+        vbox.border_width_set(25)
+        vbox.append(label, etk.VBox.START, etk.VBox.FILL, 0)
+        vbox.show()
+
+        self.modal_contents = PanelContentFrame(self.evas)
+        self.modal_contents.frame.add(vbox)
+        self.contents_set(self.modal_contents.object)
 
     @evas.decorators.del_callback
     def _destroy_contents(self):

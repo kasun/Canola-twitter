@@ -9,7 +9,7 @@ from terra.core.threaded_func import ThreadedFunction
 from manager import TwitterManager
 from client import AuthError, TwitterError
 
-from renderers import SetReplyView, ConfirmDialogView
+from renderers import SetReplyView, ConfirmDialogView, SetMessageView, ResultMessageView, WaitMessageView
 
 manager = Manager()
 twitter_manager = TwitterManager()
@@ -92,57 +92,6 @@ class UserPassController(ModalController):
 #####################################################################################
 # Twitter options
 #####################################################################################
-
-'''class TwitterReplyOptionsController(MixedListController):
-    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Reply"
-    
-    def __init__(self, model, canvas, parent):
-        MixedListController.__init__(self, model, canvas, parent)
-        self.view.button_add(label="Cancel", func=self.callback_cancel)
-        self.view.button_add(label="OK", func=self.callback_ok)
-        
-        
-    def callback_ok(self, button):
-        if self.model.callback_ok:
-            self.model.callback_ok()
-        self.back()
-        
-    def callback_cancel(self, button):
-        self.back()
-        
-class TwitterFavoriteOptionsController(MixedListController):
-    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Favorite"
-    
-    def __init__(self, model, canvas, parent):
-        MixedListController.__init__(self, model, canvas, parent)
-        self.view.button_add(label="No", func=self.callback_no)
-        self.view.button_add(label="Yes", func=self.callback_yes)
-        
-        
-    def callback_yes(self, button):
-        if self.model.callback_yes:
-            self.model.callback_yes()
-        self.back()
-        
-    def callback_no(self, button):
-        self.back()
-        
-class TwitterRetweetOptionsController(MixedListController):
-    terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Retweet"
-    
-    def __init__(self, model, canvas, parent):
-        MixedListController.__init__(self, model, canvas, parent)
-        self.view.button_add(label="No", func=self.callback_no)
-        self.view.button_add(label="Yes", func=self.callback_yes)
-        
-        
-    def callback_yes(self, button):
-        if self.model.callback_yes:
-            self.model.callback_yes()
-        self.back()
-        
-    def callback_no(self, button):
-        self.back()'''
         
 class TwitterReplyOptionsController(ModalController):
     terra_type = "Controller/Options/Folder/Apps/Twitter/Message/Reply"
@@ -237,4 +186,99 @@ class TwitterDeleteOptionsController(ModalController):
         self.view.delete()
         self.view = None
         self.model = None
+        
+#####################################################################################
+# Twitpic controllers
+#####################################################################################
+
+class UploadToTwitpicOptionsController(ModalController):
+    terra_type = "Controller/Options/Folder/Image/Fullscreen/Submenu/Twitpic"
+
+    def __init__(self, model, canvas, parent):
+        ModalController.__init__(self, model, canvas, parent)
+        self.model = model
+        self.parent = parent
+        self.view = SetMessageView(parent.last_panel, model.title, None)
+
+        self.view.callback_ok_clicked = self._on_ok_clicked
+        self.view.callback_cancel_clicked = self.close
+        self.view.callback_escape = self.close
+        self.view.show()
+
+    def close(self):
+        def cb(*ignored):
+            self.back()
+            self.parent.back()
+        self.view.hide(end_callback=cb)
+
+    def _on_ok_clicked(self, comment):
+            
+        self.message = comment
+
+        self.view.hide()
+        
+        self.view = ConfirmDialogView('Do You want this photo <br>posted to your twitter <br>account?', self.parent.last_panel, self.model.title, None)
+        self.view.callback_yes_clicked = self._UploadToTwitpicAndPostToTwitter
+        self.view.callback_no_clicked = self._UploadToTwitpic
+        self.view.show()
+        
+    def _UploadToTwitpic(self):
+        
+        def th_function():
+            return self.model.uploadToTwitpic(self.message)
+
+        def th_finished(exception, retval):
+            self.view.hide()
+            result = 'Your photo has been<br> uploaded'
+            
+            def view_close():
+                self.close()
+                
+            if(retval is None):
+                result = 'Error<br> Check your connection'
+            elif(retval != 'ok'):
+                result = 'Error<br> ' + retval
+            
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, result)
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+            
+        self.view.hide()
+        
+        self.view = WaitMessageView(self.parent.last_panel, self.model.title, None, 'Uploading photo<br>Please Wait')
+        self.view.show()
+        ThreadedFunction(th_finished, th_function).start()
+    
+    def _UploadToTwitpicAndPostToTwitter(self):
+        
+        def th_function():
+            return self.model.uploadToTwitpicAndPostToTwitter(self.message)
+
+        def th_finished(exception, retval):
+            self.view.hide()
+            result = 'Your photo has been<br> uploaded and posted in <br>twitter'
+            
+            def view_close():
+                self.close()
+            
+            if(retval is None):
+                result = 'Error<br> Check your connection'
+            elif(retval != 'ok'):
+                result = 'Error<br> ' + retval
+            
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, result)
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+            
+        self.view.hide()
+        
+        self.view = WaitMessageView(self.parent.last_panel, self.model.title, None, 'Uploading photo<br>Please Wait')
+        self.view.show()
+        ThreadedFunction(th_finished, th_function).start()
+
+    def delete(self):
+        self.view.delete()
+        self.view = None
+        self.model = None
+
 

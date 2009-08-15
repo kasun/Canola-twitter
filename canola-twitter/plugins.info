@@ -19,6 +19,7 @@ filter_map = Icon/Folder/Task/Apps/Twitter - Icon
 	     Model/Settings/Folder/InternetMedia/Twitter - SettingsModel
 	     Model/Settings/Folder/InternetMedia/Twitter/UserPass - UserPassOptionsModel
 	     Model/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsModelFolder
+             Model/Options/Folder/Image/Fullscreen/Submenu/Twitpic - TwitpicOptionsModel
 	     
 [Twitter Options]
 modname = twitter.options
@@ -29,6 +30,7 @@ filter_map = Controller/Settings/Folder/InternetMedia/Twitter - SettingsControll
              Controller/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsController
              Controller/Options/Folder/Apps/Twitter/Message/Retweet - TwitterRetweetOptionsController
              Controller/Options/Folder/Apps/Twitter/Message/Delete - TwitterDeleteOptionsController
+             Controller/Options/Folder/Image/Fullscreen/Submenu/Twitpic - UploadToTwitpicOptionsController
 
 [Twitter Manager]
 modname = twitter.manager
