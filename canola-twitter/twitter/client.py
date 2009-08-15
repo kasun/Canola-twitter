@@ -51,6 +51,16 @@ class Client(object):
         except HTTPError:
             raise AuthError("Authentication failed")
             
+    def getMyUpdates(self):
+        try:
+            statuses = self.api.GetUserTimeline()
+            lst = utils.getMessageList_from_statuses(statuses)
+            return lst
+        except URLError:
+            raise TwitterError("No Network")
+        except HTTPError:
+            raise AuthError("Authentication failed")
+            
     def deleteStatus(self, id):
         try:
             statuses = self.api.DestroyStatus(id)

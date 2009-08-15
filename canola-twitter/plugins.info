@@ -15,6 +15,7 @@ filter_map = Icon/Folder/Task/Apps/Twitter - Icon
 	     Model/Folder/Task/Apps/Twitter/Service/View/Public - ViewPublicModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Friends - ViewFriendsModelFolder
 	     Model/Folder/Task/Apps/Twitter/Service/View/Replies - ViewRepliesModelFolder
+	     Model/Folder/Task/Apps/Twitter/Service/View/MyUpdates - ViewMyUpdatesModelFolder
 	     Model/Settings/Folder/InternetMedia/Twitter - SettingsModel
 	     Model/Settings/Folder/InternetMedia/Twitter/UserPass - UserPassOptionsModel
 	     Model/Options/Folder/Apps/Twitter/Message/Reply - TwitterReplyOptionsModelFolder
