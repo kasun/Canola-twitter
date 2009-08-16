@@ -27,13 +27,6 @@ class ListController(BaseListController):
     
     def __init__(self, model, canvas, parent):
         BaseListController.__init__(self, model, canvas, parent)
-        #OptionsControllerMixin.__init__(self)
-        
-    '''def options_model_get(self):
-        try:
-            return self.model.options_model_get(self)
-        except:
-            return None'''
 
     def cb_on_clicked(self, view, index):
         model = self.model.children[index]
@@ -100,7 +93,6 @@ class RowRendererWidget(GeneralRowRenderer):
 class ServiceController(BaseListController, OptionsControllerMixin):
     terra_type = "Controller/Folder/Task/Apps/Twitter/Service"
     row_renderer = RowRendererWidget
-    #list_group = "list_video"
 
     def __init__(self, model, canvas, parent):
         self.empty_msg = model.empty_msg

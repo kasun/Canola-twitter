@@ -55,8 +55,7 @@ class UserPassController(ModalController):
             self.view.message("Username and <br>Password can't be null")
             ecore.timer_add(1.5, cb_close)
             return
-
-        #twitter_manager.login(self.view.username,self.view.password)
+        
         def refresh(session):
             session.login(self.view.username,self.view.password)
             
@@ -114,13 +113,42 @@ class TwitterReplyOptionsController(ModalController):
         self.view.hide(end_callback=cb)
 
     def _on_ok_clicked(self, reply):
+        
+        def do_operation():
+            self.reply = reply
+            self.view.hide()
+            self.view = WaitMessageView(self.parent.last_panel, self.model.title, None, 'Operation in progress<br>Please Wait')
+            self.view.show()
+            return self.model.reply(reply)
+
+        def operation_finished(exception, retval):
             
-        self.reply = reply
-        self.view.hide()
-        self.model.reply(reply)
-        #self.view = MessageView(self.parent.last_panel, "please wait")
-        #self.view.message()
-        #ThreadedFunction(th_finished, th_function).start()
+            msg = None
+            
+            if retval:
+                msg = "Reply sent<br> Successfully"
+                
+            else:
+                msg = "Unknow error.<br> Please try again"
+                
+            if exception is not None:
+                if isinstance(exception, TwitterError):
+                    msg = "Unable to connect<br> to server" + \
+                        "Check your connection<br> and try again"
+                elif isinstance(exception, AuthError):
+                    msg = "Authentication error"
+                else:
+                    msg = "An unknown error<br> has occured<br>" + \
+                        str(exception.message)
+
+                log.error(exception)
+            
+            self.view.hide()
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, msg)
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+        
+        ThreadedFunction(operation_finished, do_operation).start()
 
     def delete(self):
         self.view.delete()
@@ -149,8 +177,41 @@ class TwitterRetweetOptionsController(ModalController):
         self.view.hide(end_callback=cb)
 
     def _on_yes_clicked(self):
-        self.view.hide()
-        self.model.retweet()
+        
+        def do_operation():
+            self.view.hide()
+            self.view = WaitMessageView(self.parent.last_panel, self.model.title, None, 'Operation in progress<br>Please Wait')
+            self.view.show()
+            return self.model.retweet()
+
+        def operation_finished(exception, retval):
+            
+            msg = None
+            
+            if retval:
+                msg = "Status retweeted<br> Successfully"
+                
+            else:
+                msg = "Unknow error.<br> Please try again"
+                
+            if exception is not None:
+                if isinstance(exception, TwitterError):
+                    msg = "Unable to connect<br> to server" + \
+                        "Check your connection<br> and try again."
+                elif isinstance(exception, AuthError):
+                    msg = "Authentication error"
+                else:
+                    msg = "An unknown error<br> has occured<br>" + \
+                        str(exception.message)
+
+                log.error(exception)
+            
+            self.view.hide()
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, msg)
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+        
+        ThreadedFunction(operation_finished, do_operation).start()
 
     def delete(self):
         self.view.delete()
@@ -179,8 +240,41 @@ class TwitterDeleteOptionsController(ModalController):
         self.view.hide(end_callback=cb)
 
     def _on_yes_clicked(self):
-        self.view.hide()
-        self.model.deleteStatus()
+        
+        def do_operation():
+            self.view.hide()
+            self.view = WaitMessageView(self.parent.last_panel, self.model.title, None, 'Operation in progress<br>Please Wait')
+            self.view.show()
+            return self.model.deleteStatus()
+
+        def operation_finished(exception, retval):
+            
+            msg = None
+            
+            if retval:
+                msg = "Status Deleted<br> Successfully"
+                
+            else:
+                msg = "Unknow error.<br> Please try again"
+                
+            if exception is not None:
+                if isinstance(exception, TwitterError):
+                    msg = "Unable to connect<br> to server" + \
+                        "Check your connection<br> and try again."
+                elif isinstance(exception, AuthError):
+                    msg = "Authentication error"
+                else:
+                    msg = "An unknown error<br> has occured<br> " + \
+                        str(exception.message)
+
+                log.error(exception)
+            
+            self.view.hide()
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, msg)
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+        
+        ThreadedFunction(operation_finished, do_operation).start()
 
     def delete(self):
         self.view.delete()

@@ -64,6 +64,7 @@ class Client(object):
     def deleteStatus(self, id):
         try:
             statuses = self.api.DestroyStatus(id)
+            return True
         except URLError:
             raise TwitterError("No Network")
         except HTTPError:
@@ -72,6 +73,7 @@ class Client(object):
     def sendTweet(self,msg):
         try:
             statuses = self.api.PostUpdate(msg)
+            return True
         except URLError:
             raise TwitterError("No Network")
         except HTTPError:

@@ -32,7 +32,7 @@ class Icon(PluginDefaultIcon):
 class MainModelFolder(ModelFolder, Task):
     """Main model.
 
-    This initializes the other two models.
+    This initializes the other models.
     """
     terra_type = "Model/Folder/Task/Apps/Twitter"
     terra_task_type = "Task/Folder/Task/Apps/Twitter"
@@ -47,12 +47,7 @@ class MainModelFolder(ModelFolder, Task):
         except TwitterError:
             return
         
-    '''def options_model_get(self, controller):
-        return MainOptionsModelFolder(None, controller)'''
-        
     def do_load(self):
-        #if True:
-        #    return
         
         ViewPublicModelFolder("View Public Timeline",self)
         if twitter_manager.isLogged():
@@ -367,7 +362,7 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
         self.user_id = user_id
         
     def reply(self, reply):
-        twitter_manager.sendTweet(reply)
+        return twitter_manager.sendTweet(reply)
         
     def do_load(self):
         pass
@@ -390,7 +385,7 @@ class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
 
     def retweet(self):
         retweetMessage = 'RT: @' + self.user_id + ' ' + self.status_text
-        twitter_manager.sendTweet(retweetMessage)
+        return twitter_manager.sendTweet(retweetMessage)
         
     def do_load(self):
         pass
@@ -404,7 +399,7 @@ class TwitterDeleteOptionsModelFolder(OptionsModelFolder):
         self.status_id = status_id
 
     def deleteStatus(self):
-        twitter_manager.deleteStatus(self.status_id)
+        return twitter_manager.deleteStatus(self.status_id)
         
 #####################################################################################
 # Twitpic options model
