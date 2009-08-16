@@ -145,6 +145,7 @@ class ServiceModelFolder(ModelFolder):
     
     def __init__(self, name, parent):
         ModelFolder.__init__(self, name, parent)
+        self.parent_model = parent
         
     def do_load(self):
         self.search()
@@ -153,8 +154,22 @@ class ServiceModelFolder(ModelFolder):
         del self.children[:]
         
         if not self.threaded_search:
-            for c in self.do_search():
-                self.children.append(c)
+            emsg = ''
+            try:
+                for c in self.do_search():
+                    self.children.append(c)
+                    return
+            except TwitterError :
+                emsg = "Unable to connect to server.<br>" + \
+                        "Check your connection and try again."
+            except AuthError:
+                emsg = "Authentication error "
+            except:
+                "An unknown error has occured.<br>"
+                
+            if self.parent_model.callback_notify:
+                    self.parent_model.callback_notify(CanolaError(emsg))
+                    
             return
     
         def refresh():
@@ -261,6 +276,7 @@ class ViewMyUpdatesModelFolder(ServiceModelFolder):
 class SendModelFolder(ModelFolder):
     def __init__(self, name, parent):
         ModelFolder.__init__(self, name, parent)
+        self.parent_model = parent
         self.query = None
 
     def do_load(self):
@@ -270,8 +286,19 @@ class SendModelFolder(ModelFolder):
         return self.query
     
     def sendTweet(self,text):
-        twitter_manager.sendTweet(text)
-    
+        emsg = ''
+        try:
+            twitter_manager.sendTweet(text)
+        except TwitterError :
+                emsg = "Unable to connect to server.<br>" + \
+                        "Check your connection and try again."
+        except AuthError:
+                emsg = "Authentication error "
+        except:
+                "An unknown error has occured.<br>"
+                
+        if self.parent_model.callback_notify:
+            self.parent_model.callback_notify(CanolaError(emsg))
 ################################################################################
 # twitter settings Models
 ################################################################################

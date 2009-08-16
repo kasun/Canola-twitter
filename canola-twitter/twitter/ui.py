@@ -27,7 +27,8 @@ class ListController(BaseListController):
     
     def __init__(self, model, canvas, parent):
         BaseListController.__init__(self, model, canvas, parent)
-
+        self.model.callback_notify = self._show_notify
+        
     def cb_on_clicked(self, view, index):
         model = self.model.children[index]
         
@@ -38,11 +39,16 @@ class ListController(BaseListController):
         def do_search(ignored, text):
             if text is not None:
                 model.query = text
+                
                 model.sendTweet(text)
 
         dialog = EntryDialogModel("Send Tweets", "Enter text to tweet:",
                                   answer_callback=do_search)
         self.parent.show_notify(dialog)
+        
+    def _show_notify(self, err):
+        """Popup a modal with a notify message."""
+        self.parent.show_notify(err)
         
 class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
     '''RowRenderer to display status lists'''
