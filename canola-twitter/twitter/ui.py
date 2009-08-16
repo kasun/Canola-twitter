@@ -6,6 +6,7 @@ import locale
 import logging
 
 from terra.core.manager import Manager
+from terra.core.controller import Controller
 from terra.ui.base import PluginThemeMixin
 
 from model import SendModelFolder,ViewFriendsModelFolder,ViewPublicModelFolder,ViewRepliesModelFolder
@@ -51,6 +52,7 @@ class ListController(BaseListController):
         self.parent.show_notify(dialog)
         
 class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
+    '''RowRenderer to display status lists'''
     plugin = "twitter"
 
     def __init__(self, parent, theme=None):
@@ -81,11 +83,11 @@ class GeneralRowRenderer(PluginThemeMixin, BaseRowRenderer):
             return
 
         self._model = model
-        self.part_text_set("user_id", "model.uname")
-        self.part_text_set("text", "model.text")
-        self.part_text_set("status_info", "model.info")
+        self.part_text_set("user_id", model.uname)
+        self.part_text_set("text", model.text)
+        self.part_text_set("status_info", model.info)
         
-        #model.request_thumbnail(self.cb_load_thumbnail)
+        model.request_thumbnail(self.cb_load_thumbnail)
         
     @evas.decorators.del_callback
     def __on_delete(self):
@@ -111,6 +113,7 @@ class ServiceController(BaseListController, OptionsControllerMixin):
         self.parent.show_notify(err)
         
 class GeneralStatusRenderer(PluginThemeMixin, BaseRowRenderer):
+    '''Rowrenderer to display selected statuses'''
     plugin = "twitter"
 
     def __init__(self, parent, theme=None):

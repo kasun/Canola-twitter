@@ -145,17 +145,13 @@ class MessageModel(ModelFolder):
         
 class ServiceModelFolder(ModelFolder):
     terra_type = "Model/Folder/Task/Apps/Twitter/Service"
-    threaded_search = True
+    threaded_search = False
     empty_msg = "Empty"
     
     def __init__(self, name, parent):
         ModelFolder.__init__(self, name, parent)
-        #self.client = Client()
         
     def do_load(self):
-        #if True:
-        #    self.callback_info("Network is down")
-        #    return
         self.search()
         
     def search(self,end_callback=None):
@@ -165,11 +161,6 @@ class ServiceModelFolder(ModelFolder):
             for c in self.do_search():
                 self.children.append(c)
             return
-        
-        #if not self.threaded_search:
-        #    for model in self.do_search():
-        #        self.children.append(model)
-        #return
     
         def refresh():
             return self.do_search()
@@ -195,6 +186,9 @@ class ServiceModelFolder(ModelFolder):
                         str(exception.message)
 
                 log.error(exception)
+                
+                if self.callback_notify:
+                    self.callback_notify(CanolaError(emsg))
 
             for item in retval:
                 self.children.append(item)
@@ -202,8 +196,8 @@ class ServiceModelFolder(ModelFolder):
             if end_callback:
                 end_callback()
 
-            #if self.callback_search_finished:
-            #    self.callback_search_finished()
+            if self.callback_search_finished:
+                self.callback_search_finished()
 
             self.inform_loaded()
 
@@ -304,8 +298,6 @@ class UserPassOptionsModel(MixedListItemDual):
 
     def __init__(self, parent=None):
         MixedListItemDual.__init__(self, parent)
-        #self.username = lastfm_manager.get_username()
-        #self.password = lastfm_manager.get_password()
 
     def get_title(self):
         if not self.isLogged():
@@ -346,16 +338,6 @@ class UserPassOptionsModel(MixedListItemDual):
 ################################################################################
 # twitter options Models
 ################################################################################
-
-'''class MainOptionsModelFolder(OptionsModelFolder):
-    terra_type = "Model/Options/Folder/Apps/Twitter"
-    title = "options"
-
-    def __init__(self, parent, screen_controller=None):
-        OptionsModelFolder.__init__(self, parent, screen_controller)
-    
-    def do_load(self):
-        TwitterOptionsModelFolder(self)'''
     
 class TwitterOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message"
@@ -388,17 +370,13 @@ class TwitterReplyOptionsModelFolder(OptionsModelFolder):
         twitter_manager.sendTweet(reply)
         
     def do_load(self):
-        #TwitterReplyTextModelFolder('@' + self.user_id + ' ', self)
         pass
     
 class TwitterFavoriteOptionsModelFolder(OptionsModelFolder):
     terra_type = "Model/Options/Folder/Apps/Twitter/Message/Favorite"
     title = "Mark Favorite"
     
-    
-        
     def do_load(self):
-        #TwitterFavoriteMessageModelFolder(self)
         pass
     
 class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
@@ -415,7 +393,6 @@ class TwitterRetweetOptionsModelFolder(OptionsModelFolder):
         twitter_manager.sendTweet(retweetMessage)
         
     def do_load(self):
-        #TwitterRetweetMessageModelFolder(self)
         pass
     
 class TwitterDeleteOptionsModelFolder(OptionsModelFolder):
@@ -446,11 +423,6 @@ class TwitpicOptionsModel(OptionsModelFolder):
     def uploadToTwitpic(self, message):
         
         #get the path of the current image represented by ImageLocalModel
-        '''filepath = self.parent_model.getCurrentImagePath()
-        
-        filename = utils.getNameFromPath(filepath)
-        
-        imagedata = utils.getImageDataFromPath(filepath)'''
         
         currentImageItemFullScreen = self.parent_model.screen_controller.view.image_frame_cur
         
@@ -473,11 +445,6 @@ class TwitpicOptionsModel(OptionsModelFolder):
     def uploadToTwitpicAndPostToTwitter(self, message):
         
         #get the path of the current image represented by ImageLocalModel
-        '''filepath = self.parent_model.getCurrentImagePath()
-        
-        filename = utils.getNameFromPath(filepath)
-        
-        imagedata = utils.getImageDataFromPath(filepath)'''
         
         #TO DO
         #Load image data from evas
