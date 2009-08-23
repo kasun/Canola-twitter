@@ -292,12 +292,19 @@ class UploadToTwitpicOptionsController(ModalController):
         ModalController.__init__(self, model, canvas, parent)
         self.model = model
         self.parent = parent
-        self.view = SetMessageView(parent.last_panel, model.title, None)
+        
+        if(not twitter_manager.isLogged()):
+            self.view = ResultMessageView(self.parent.last_panel, self.model.title, None, 'Please sign in using<br> setting > Internet Media ><br> Twitter')
+            self.view.callback_ok_clicked = self.close
+            self.view.show()
+        
+        else:
+            self.view = SetMessageView(parent.last_panel, model.title, None)
 
-        self.view.callback_ok_clicked = self._on_ok_clicked
-        self.view.callback_cancel_clicked = self.close
-        self.view.callback_escape = self.close
-        self.view.show()
+            self.view.callback_ok_clicked = self._on_ok_clicked
+            self.view.callback_cancel_clicked = self.close
+            self.view.callback_escape = self.close
+            self.view.show()
 
     def close(self):
         def cb(*ignored):
